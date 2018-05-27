@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/avatar?characterEncoding=utf8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+    username: fang
+    password: 123456
+    initialSize: 5
+    maxActive: 20
+    minIdle: 5
+    maxIdle: 10
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  thymeleaf:
+    cache: false
+    enabled: true
+    prefix: classpath:/temps/
+    suffix: .html
+    mode: LEGACYHTML5
+server:
+  port: 9090
