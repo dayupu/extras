@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/home'
-import Apidoc_typeList from '@/components/apidoc/typeList'
-import Apidoc_boxList from '@/components/apidoc/boxList'
+import {ApiDesignMenu} from "@/config/menus";
+import Home from '@/views/home.vue'
+import ApiDesignHome from '@/views/apiDesign/zhome.vue'
+import ApiDesignDefault from '@/views/apiDesign/zdefault.vue'
 
 Vue.use(Router);
+Vue.prototype.mainMenus = {apiDesign: ApiDesignMenu};
 
 export default new Router({
   routes: [
@@ -14,14 +16,10 @@ export default new Router({
       component: Home
     },
     {
-      path: '/apidoc/typeList',
-      name: 'typeList',
-      component: Apidoc_typeList
-    },
-    {
-      path: '/apidoc/boxList',
-      name: 'typeList',
-      component: Apidoc_boxList
+      path: '/apiDesign',
+      name: 'api设计',
+      component: ApiDesignHome,
+      children: [{path: "/", component: ApiDesignDefault}, ...ApiDesignMenu.subMenus]
     },
     {
       path: '*',

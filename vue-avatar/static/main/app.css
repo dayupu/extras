@@ -1,0 +1,58 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+
+#app {
+  background-color: #eee;
+  height: 100%;
+}
+
+.app-header {
+  width: 100%;
+  margin-bottom: 15px;
+  background-color: #fff;
+}
+
+.app-header-title {
+  width: 90%;
+  margin: 0 auto;
+  height: 100%;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0092dd;
+}
+
+.app-header-title-items{
+  display: inline-block;
+  margin-left: 50px;
+}
+
+.app-wrapper {
+  position: relative;
+  border-radius: 6px;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+  margin: 0 auto;
+  width: 90%;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.app-wrapper-sidebar {
+  width: 200px;
+  border-right: 1px solid #9d9d9d;
+}
+
+.app-footer {
+  margin-top: 15px;
+  width: 100%;
+  text-align: center;
+  color: #0092dd;
+  background-color: #fff;
+}
+
+.app-breadcrumb{
+  margin-bottom: 10px;
+}

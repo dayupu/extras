@@ -12,8 +12,13 @@ spring:
   jpa:
     database: mysql
     show-sql: true
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL57Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+
   thymeleaf:
     cache: false
     enabled: true
