@@ -1,25 +1,27 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {ApiDesignMenu} from "@/config/menus";
-import Home from '@/views/home.vue'
-import ApiDesignHome from '@/views/apiDesign/zhome.vue'
-import ApiDesignDefault from '@/views/apiDesign/zdefault.vue'
+import {Tools, Docs} from "@/config/menus";
 
 Vue.use(Router);
-Vue.prototype.mainMenus = {apiDesign: ApiDesignMenu};
-
+Vue.prototype.moduleMenus = {tools: Tools, docs: Docs};
 export default new Router({
   routes: [
     {
       path: '/home',
       name: 'home',
-      component: Home
+      component: require('@/views/home.vue').default,
     },
     {
-      path: '/apiDesign',
-      name: 'api设计',
-      component: ApiDesignHome,
-      children: [{path: "/", component: ApiDesignDefault}, ...ApiDesignMenu.subMenus]
+      path: '/docs',
+      name: '文档库',
+      component: require('@/views/docs/zhome.vue').default,
+      children: [{path: "/", name: "docs", component: require('@/views/docs/zdocs.vue').default}, ...Docs.subMenus]
+    },
+    {
+      path: '/tools',
+      name: '工具箱',
+      component: require('@/views/tools/zhome.vue').default,
+      children: [{path: "/", component: require('@/views/tools/zdefault.vue').default}, ...Tools.subMenus]
     },
     {
       path: '*',

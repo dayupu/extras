@@ -9,15 +9,20 @@ spring:
     maxActive: 20
     minIdle: 5
     maxIdle: 10
+
   jpa:
     database: mysql
     show-sql: true
     generate-ddl: true
     database-platform: org.hibernate.dialect.MySQL57Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
 
   thymeleaf:
     cache: false

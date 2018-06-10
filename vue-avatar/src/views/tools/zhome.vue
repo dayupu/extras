@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div style="height: 1000px;">
     <el-container>
       <el-aside style="max-width: 200px;">
         <el-menu :default-active="menuSelected" :default-openeds="['top']" class="el-menu-vertical-demo" unique-opened>
           <el-submenu index="top">
             <template slot="title">
               <i class="el-icon-menu" style="color: #0092dd"></i>
-              <span slot="title">API设计</span>
+              <span slot="title">工具箱</span>
             </template>
             <router-link v-for="item of items" :to="basePath + item.path" style="text-decoration: none;">
               <el-menu-item v-bind:index="basePath + item.path" style="height: 40px;line-height: 40px;">{{item.name}}
@@ -39,8 +39,8 @@
     data() {
       return {
         menuSelected: "1",
-        basePath: this.mainMenus.apiDesign.basePath,
-        items: this.mainMenus.apiDesign.subMenus
+        basePath: this.moduleMenus.tools.basePath,
+        items: this.moduleMenus.tools.subMenus
       };
     },
     methods: {

@@ -5,11 +5,9 @@
 </template>
 
 <script>
-
-  let locations = {};
   export default {
     data() {
-      return {locations: [{name: "API设计"}, {name: "文档箱"}]}
+      return {locations: [{name: "工具箱"}, {name: "Json格式化"}]}
     }
 
   }
