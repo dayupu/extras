@@ -1,10 +1,8 @@
 package org.dayup.avatar.service.docs;
 
-import org.dayup.avatar.model.vo.DocLibraryVo;
+import org.dayup.avatar.model.define.PageResult;
+import org.dayup.avatar.model.vo.DocumentQuery;
 import org.dayup.avatar.model.vo.DocumentVo;
-
-import java.util.List;
-
 
 public interface IDocumentService {
 
@@ -14,5 +12,5 @@ public interface IDocumentService {
 
     DocumentVo getDocument(Long id);
 
-    List<DocumentVo> getDocumentList(Long libId);
+    PageResult<DocumentVo> search(DocumentQuery query);
 }

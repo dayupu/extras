@@ -4,14 +4,14 @@ let ApiUrls = {
   docs: {
     library: {
       browse: _host + '/docs/lib/browse',
-      detail: _host + '/docs/lib/detail',
       create: _host + '/docs/lib/create',
-      list: _host + '/docs/lib/list'
+      search: _host + '/docs/lib/search'
     },
     document:{
       browse: _host + '/docs/doc/browse',
       html: _host + '/docs/doc/html',
       save: _host + '/docs/doc/save',
+      search: _host + '/docs/doc/search',
     }
   }
 };

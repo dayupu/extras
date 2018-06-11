@@ -4,7 +4,7 @@
       <el-header class="app-header" style="height: 50px; line-height: 50px;">
         <div class="app-header-title">
           <span>
-            <i class="fa fa-cube"></i>&nbsp;&nbsp;提莫队长
+            <i class="fa fa-cube"></i>&nbsp;&nbsp;芳芳队长
           </span>
           <span class="app-header-title-items">
               <router-link to="/docs">

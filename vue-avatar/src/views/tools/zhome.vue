@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 1000px;">
+  <div>
     <el-container>
       <el-aside style="max-width: 200px;">
         <el-menu :default-active="menuSelected" :default-openeds="['top']" class="el-menu-vertical-demo" unique-opened>
@@ -22,13 +22,6 @@
 
   </div>
 </template>
-
-<style>
-  .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
-    min-height: 400px;
-  }
-</style>
 
 <script>
 

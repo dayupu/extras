@@ -30,6 +30,9 @@ public class Document extends EntityDate {
     @JoinColumn(name = "libId", insertable = false, updatable = false)
     private DocLibrary library;
 
+    @Column
+    private Integer sequence;
+
     @Column(nullable = false)
     private String title;
 
@@ -87,5 +90,13 @@ public class Document extends EntityDate {
 
     public void setLibrary(DocLibrary library) {
         this.library = library;
+    }
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
     }
 }

@@ -4,15 +4,11 @@ import org.dayup.avatar.jpa.base.EntityDate;
 import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -25,6 +21,9 @@ public class DocLibrary extends EntityDate {
 
     @Column(nullable = false)
     private String name;
+
+    @Column
+    private Integer sequence;
 
     @Column
     private String description;
@@ -66,4 +65,11 @@ public class DocLibrary extends EntityDate {
         this.status = status;
     }
 
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
 }

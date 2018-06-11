@@ -1,6 +1,7 @@
 package org.dayup.avatar.support.common;
 
 import org.apache.commons.codec.binary.Base32;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
@@ -36,7 +37,6 @@ public final class IDSecure {
 
         try {
             String idStr = new String(base32.decode(encodeStr), UTF8);
-            System.out.println(idStr);
             return Long.parseLong(idStr.replaceAll("[a-zA-Z]", ""));
         } catch (Exception e) {
             e.printStackTrace();

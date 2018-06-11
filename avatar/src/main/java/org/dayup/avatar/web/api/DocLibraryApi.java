@@ -1,6 +1,7 @@
 package org.dayup.avatar.web.api;
 
 import org.dayup.avatar.model.define.ResponseInfo;
+import org.dayup.avatar.model.vo.DocLibraryQuery;
 import org.dayup.avatar.model.vo.DocLibraryVo;
 import org.dayup.avatar.model.vo.DocumentVo;
 import org.dayup.avatar.service.docs.IDocLibraryService;
@@ -46,22 +47,6 @@ public class DocLibraryApi extends BaseApi {
         }
     }
 
-    @GetMapping("/detail")
-    public ResponseInfo getDetail(@RequestParam("id") String idStr) {
-
-        try {
-            Long id = IDSecure.decode(idStr);
-            List<DocumentVo> documentVos = documentService.getDocumentList(id);
-            Map<String, Object> result = new HashMap<>();
-            result.put("documents", documentVos);
-            return wrapSuccess(result);
-        } catch (CoreException e) {
-            return wrapException(e);
-        } catch (Exception e) {
-            return wrapError();
-        }
-    }
-
     @PostMapping("/create")
     public ResponseInfo create(@RequestBody DocLibraryVo docLibraryVo) {
         try {
@@ -75,16 +60,9 @@ public class DocLibraryApi extends BaseApi {
     }
 
 
-    @PostMapping("/list")
-    public ResponseInfo list() {
-        try {
-            List<DocLibraryVo> voList = libraryService.getLibraryList();
-            return wrapSuccess(voList);
-        } catch (CoreException e) {
-            return wrapException(e);
-        } catch (Exception e) {
-            return wrapError();
-        }
+    @PostMapping("/search")
+    public ResponseInfo search(@RequestBody DocLibraryQuery query) {
+        return wrapSuccess(libraryService.search(query));
     }
 
 }

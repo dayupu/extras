@@ -11,7 +11,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="small" @click="onSubmit">立即创建</el-button>
-        <el-button size="small" @click="onCancel">取消</el-button>
+        <el-button type="success" size="small" @click="onCancel" plain>返回</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -31,7 +31,10 @@
     methods: {
       onSubmit() {
         this.$http.post(this.ApiUrls.docs.library.create, this.document).then((response) => {
-          this.messageAlert(response)
+          this.messageAlert(response);
+          if (this.isSuccess(response.data.code)) {
+            this.onCancel();
+          }
         });
       },
       onCancel() {

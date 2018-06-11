@@ -1,14 +1,19 @@
 package org.dayup.avatar.service.docs.impl;
 
 import org.dayup.avatar.jpa.entity.DocLibrary;
+import org.dayup.avatar.jpa.entity.Document;
 import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.dayup.avatar.jpa.repository.DocLibraryRepo;
+import org.dayup.avatar.model.define.PageResult;
 import org.dayup.avatar.model.parser.DocLibraryParser;
+import org.dayup.avatar.model.vo.DocLibraryQuery;
 import org.dayup.avatar.model.vo.DocLibraryVo;
+import org.dayup.avatar.model.vo.DocumentVo;
 import org.dayup.avatar.service.docs.IDocLibraryService;
 import org.dayup.avatar.support.constants.EMessage;
 import org.dayup.avatar.support.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +34,7 @@ public class DocLibraryServiceImpl implements IDocLibraryService {
     public DocLibraryVo getLibrary(Long id) {
 
         DocLibrary docLibrary = docLibraryRepo.findById(id).get();
-        if(docLibrary == null){
+        if (docLibrary == null) {
             throw new BusinessException(EMessage.DOC01002);
         }
 
@@ -45,8 +50,15 @@ public class DocLibraryServiceImpl implements IDocLibraryService {
             throw new BusinessException(EMessage.DOC01001);
         }
 
+        DocLibrary lastLib = docLibraryRepo.findTop1ByStatusOrderBySequenceDesc(EDataStatus.INIT);
+        Integer sequence = 1;
+        if (lastLib != null && lastLib.getSequence() != null) {
+            sequence = lastLib.getSequence() + 1;
+        }
+
         docLibrary = new DocLibrary();
         docLibrary.setName(docLibraryVo.getName());
+        docLibrary.setSequence(sequence);
         docLibrary.setDescription(docLibraryVo.getDescription());
         docLibrary.setStatus(EDataStatus.INIT);
         docLibrary.setCreatedOn(LocalDateTime.now());
@@ -61,10 +73,8 @@ public class DocLibraryServiceImpl implements IDocLibraryService {
 
     @Transactional
     @Override
-    public List<DocLibraryVo> getLibraryList() {
-
-        List<DocLibrary> docLibraries = docLibraryRepo.findByStatus(EDataStatus.INIT);
-
-        return docLibraryParser.toVoList(docLibraries, DocLibraryVo.class);
+    public PageResult<DocLibraryVo> search(DocLibraryQuery query) {
+        Page<DocLibrary> result = docLibraryRepo.findByStatus(EDataStatus.INIT, query.page());
+        return docLibraryParser.toVoPageResult(result, DocLibraryVo.class);
     }
 }

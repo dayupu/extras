@@ -1,6 +1,8 @@
 package org.dayup.avatar.web.api;
 
+import org.dayup.avatar.jpa.repository.DocumentRepo;
 import org.dayup.avatar.model.define.ResponseInfo;
+import org.dayup.avatar.model.vo.DocumentQuery;
 import org.dayup.avatar.model.vo.DocumentVo;
 import org.dayup.avatar.service.docs.IDocumentService;
 import org.dayup.avatar.support.BaseApi;
@@ -50,5 +52,9 @@ public class DocumentApi extends BaseApi {
         }
     }
 
+    @PostMapping("/search")
+    public ResponseInfo search(@RequestBody DocumentQuery query) {
+        return wrapSuccess(documentService.search(query));
+    }
 
 }

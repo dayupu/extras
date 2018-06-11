@@ -13,7 +13,7 @@
         </el-col>
         <el-col :span="1">
           <div class="grid-content bg-purple">
-            <el-button size="small" @click="handleCancel">返回</el-button>
+            <el-button type="success" size="small" @click="handleCancel" plain>返回</el-button>
           </div>
         </el-col>
       </el-row>
