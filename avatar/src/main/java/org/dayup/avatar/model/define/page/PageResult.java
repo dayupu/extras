@@ -1,4 +1,4 @@
-package org.dayup.avatar.model.define;
+package org.dayup.avatar.model.define.page;
 
 import java.io.Serializable;
 import java.util.List;

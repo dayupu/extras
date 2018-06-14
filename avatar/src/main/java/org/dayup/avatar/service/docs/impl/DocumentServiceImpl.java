@@ -3,7 +3,8 @@ package org.dayup.avatar.service.docs.impl;
 import org.dayup.avatar.jpa.entity.Document;
 import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.dayup.avatar.jpa.repository.DocumentRepo;
-import org.dayup.avatar.model.define.PageResult;
+import org.dayup.avatar.model.define.page.OperateSearch;
+import org.dayup.avatar.model.define.page.PageResult;
 import org.dayup.avatar.model.parser.DocumentParser;
 import org.dayup.avatar.model.vo.DocumentQuery;
 import org.dayup.avatar.model.vo.DocumentVo;
@@ -11,6 +12,8 @@ import org.dayup.avatar.service.docs.IDocumentService;
 import org.dayup.avatar.support.common.IDSecure;
 import org.dayup.avatar.support.constants.EMessage;
 import org.dayup.avatar.support.exceptions.BusinessException;
+import org.dayup.avatar.support.fool.model.FoolCondition;
+import org.dayup.avatar.support.fool.model.FoolQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DocumentServiceImpl implements IDocumentService {
@@ -77,7 +82,20 @@ public class DocumentServiceImpl implements IDocumentService {
     @Override
     public PageResult<DocumentVo> search(DocumentQuery query) {
         Long libId = IDSecure.decode(query.getLibId());
-        Page<Document> result = documentRepo.findByLibIdAndStatus(libId, EDataStatus.INIT, query.page());
+
+
+        OperateSearch search = query.getSearch();
+        List<FoolCondition> conditions = new ArrayList<>();
+        conditions.add(FoolQuery.with("status").eq(EDataStatus.INIT));
+        if (search != null && search.isValid()) {
+            if ("title".equals(search.getName())) {
+                conditions.add(FoolQuery.with("title").like(search.getText() + "%"));
+            }
+            if ("createdOn".equals(search.getName())) {
+                conditions.add(FoolQuery.with("createdOn").between(search.getDateTimes()[0], search.getDateTimes()[1]));
+            }
+        }
+        Page<Document> result = documentRepo.search(conditions, query.page());
         return documentParser.toVoPageResult(result, DocumentVo.class);
     }
 }

@@ -1,14 +1,12 @@
 package org.dayup.avatar.service.docs.impl;
 
 import org.dayup.avatar.jpa.entity.DocLibrary;
-import org.dayup.avatar.jpa.entity.Document;
 import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.dayup.avatar.jpa.repository.DocLibraryRepo;
-import org.dayup.avatar.model.define.PageResult;
+import org.dayup.avatar.model.define.page.PageResult;
 import org.dayup.avatar.model.parser.DocLibraryParser;
 import org.dayup.avatar.model.vo.DocLibraryQuery;
 import org.dayup.avatar.model.vo.DocLibraryVo;
-import org.dayup.avatar.model.vo.DocumentVo;
 import org.dayup.avatar.service.docs.IDocLibraryService;
 import org.dayup.avatar.support.constants.EMessage;
 import org.dayup.avatar.support.exceptions.BusinessException;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class DocLibraryServiceImpl implements IDocLibraryService {

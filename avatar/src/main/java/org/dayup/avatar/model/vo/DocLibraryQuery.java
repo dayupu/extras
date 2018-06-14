@@ -1,6 +1,6 @@
 package org.dayup.avatar.model.vo;
 
-import org.dayup.avatar.model.define.PageQuery;
+import org.dayup.avatar.model.define.page.PageQuery;
 
 import java.io.Serializable;
 

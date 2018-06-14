@@ -20,6 +20,7 @@ import 'highlight.js/styles/github.css'
 import {ApiUrls} from './config/apiUrls';
 import Base from './config/base';
 import MyBreadcrumb from './tags/my-breadcrumb.vue';
+import MyTableSearch from './tags/my-table-search.vue';
 
 // Global application
 Vue.config.productionTip = false;
@@ -56,6 +57,7 @@ Vue.directive('highlight', (el) => {
 Vue.prototype.ApiUrls = ApiUrls;
 // Register to global
 Vue.component(MyBreadcrumb.name, MyBreadcrumb);
+Vue.component(MyTableSearch.name, MyTableSearch);
 Vue.component("vue-markdown", VueMarkdown);
 
 const store = new Vuex.Store({

@@ -1,5 +1,6 @@
 package org.dayup.avatar.jpa.config;
 
+import org.dayup.avatar.support.fool.FoolRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
@@ -10,12 +11,13 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import javax.sql.DataSource;
 
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "org.dayup.avatar.jpa.repository")
+@EnableJpaRepositories(repositoryBaseClass = FoolRepositoryImpl.class, basePackages = "org.dayup.avatar.jpa.repository")
 public class DataSourceManagement {
 
 

@@ -1,6 +1,6 @@
 package org.dayup.avatar.service.docs;
 
-import org.dayup.avatar.model.define.PageResult;
+import org.dayup.avatar.model.define.page.PageResult;
 import org.dayup.avatar.model.vo.DocumentQuery;
 import org.dayup.avatar.model.vo.DocumentVo;
 
