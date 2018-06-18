@@ -5,6 +5,8 @@ public enum EMessage {
     // common message
     SUCCESS("200", "common.success"),
     SAVE_SUCCESS("200", "common.save.success"),
+    DROP_SUCCESS("200", "common.drop.success"),
+    MOVE_SUCCESS("200", "common.move.success"),
     SYSTEM_ERROR("503", "common.system.error"),
     // business message
     DOC01001("500", "docs.error.library.name.exists"),

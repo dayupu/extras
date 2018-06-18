@@ -6,20 +6,22 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.ParserEmulationProfile;
 import com.vladsch.flexmark.util.options.MutableDataSet;
+import org.dayup.avatar.support.common.FileUtil;
+
 import java.util.Arrays;
 
 public class MarkDownHtmlWrapper {
 
     private static String MD_CSS = "";
 
-//    static {
-//        try {
-//            MD_CSS = FileReadUtil.readAll("md/huimarkdown.css");
-//            MD_CSS = "<style type=\"text/css\">\n" + MD_CSS + "\n</style>\n";
-//        } catch (Exception e) {
-//            MD_CSS = "";
-//        }
-//    }
+    static {
+        try {
+            MD_CSS = FileUtil.readFile("view/css/github-markdown.css");
+            MD_CSS = "<style type=\"text/css\">\n" + MD_CSS + "\n</style>\n";
+        } catch (Exception e) {
+            MD_CSS = "";
+        }
+    }
 
 
     /**
@@ -47,7 +49,6 @@ public class MarkDownHtmlWrapper {
     public static String parse(String content) {
         MutableDataSet options = new MutableDataSet();
         options.setFrom(ParserEmulationProfile.MARKDOWN);
-        // enable table parse!
         options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create()));
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();

@@ -13,11 +13,11 @@ const Docs = {
       path: ":id",
       component: require("@/views/docs/lib_browse.vue").default
     },
-    {
-      name: "documentBrowse",
-      path: ":libId/:id",
-      component: require("@/views/docs/doc_browse.vue").default
-    },
+    // {
+    //   name: "documentBrowse",
+    //   path: ":libId/:id",
+    //   component: require("@/views/docs/doc_browse.vue").default
+    // },
     {
       name: "documentEdit",
       path: ":libId/:id/edit",

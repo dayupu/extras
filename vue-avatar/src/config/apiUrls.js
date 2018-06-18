@@ -12,6 +12,8 @@ let ApiUrls = {
       html: _host + '/docs/doc/html',
       save: _host + '/docs/doc/save',
       search: _host + '/docs/doc/search',
+      drop: _host + '/docs/doc/drop',
+      move: _host + '/docs/doc/move',
     }
   }
 };

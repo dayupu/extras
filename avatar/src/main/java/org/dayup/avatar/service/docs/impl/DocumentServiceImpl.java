@@ -1,5 +1,7 @@
 package org.dayup.avatar.service.docs.impl;
 
+import org.dayup.avatar.jpa.base.SequenceComparatorASC;
+import org.dayup.avatar.jpa.base.SequenceComparatorDesc;
 import org.dayup.avatar.jpa.entity.Document;
 import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.dayup.avatar.jpa.repository.DocumentRepo;
@@ -16,8 +18,10 @@ import org.dayup.avatar.support.fool.model.FoolCondition;
 import org.dayup.avatar.support.fool.model.FoolQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -82,11 +86,10 @@ public class DocumentServiceImpl implements IDocumentService {
     @Override
     public PageResult<DocumentVo> search(DocumentQuery query) {
         Long libId = IDSecure.decode(query.getLibId());
-
-
         OperateSearch search = query.getSearch();
         List<FoolCondition> conditions = new ArrayList<>();
         conditions.add(FoolQuery.with("status").eq(EDataStatus.INIT));
+        conditions.add(FoolQuery.with("libId").eq(libId));
         if (search != null && search.isValid()) {
             if ("title".equals(search.getName())) {
                 conditions.add(FoolQuery.with("title").like(search.getText() + "%"));
@@ -95,7 +98,52 @@ public class DocumentServiceImpl implements IDocumentService {
                 conditions.add(FoolQuery.with("createdOn").between(search.getDateTimes()[0], search.getDateTimes()[1]));
             }
         }
-        Page<Document> result = documentRepo.search(conditions, query.page());
+
+        Sort sort = new Sort(Sort.Direction.ASC, "sequence");
+        Page<Document> result = documentRepo.search(conditions, query.page(sort));
         return documentParser.toVoPageResult(result, DocumentVo.class);
+    }
+
+    @Transactional
+    @Override
+    public void drop(List<Long> docIds) {
+        documentRepo.updateStatus(docIds, EDataStatus.DELETED);
+    }
+
+    @Transactional
+    @Override
+    public void move(boolean isUp, List<Long> docIds) {
+        List<Document> documents = documentRepo.findByIds(docIds, EDataStatus.INIT);
+        if (CollectionUtils.isEmpty(documents)) {
+            return;
+        }
+
+        int sequence;
+        if (isUp) {
+            documents.sort(new SequenceComparatorASC());
+            for (Document document : documents) {
+                sequence = document.getSequence() == null ? 0 : document.getSequence();
+                Document top = documentRepo.findTop1ByLibIdAndStatusAndSequenceLessThanOrderBySequenceDesc
+                        (document.getLibId(), EDataStatus.INIT, sequence);
+                if (top == null) {
+                    continue;
+                }
+                document.setSequence(top.getSequence());
+                top.setSequence(sequence);
+            }
+        } else {
+            documents.sort(new SequenceComparatorDesc());
+            for (Document document : documents) {
+                sequence = document.getSequence() == null ? 0 : document.getSequence();
+                Document under = documentRepo.findTop1ByLibIdAndStatusAndSequenceGreaterThanOrderBySequenceAsc
+                        (document.getLibId(), EDataStatus.INIT, sequence);
+                if (under == null) {
+                    continue;
+                }
+                document.setSequence(under.getSequence());
+                under.setSequence(sequence);
+            }
+        }
+
     }
 }

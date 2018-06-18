@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${document.title}"></title>
+    <link rel="stylesheet" th:href="@{/view/plugins/highlight/styles/github.css}"/>
+    <script type="text/javascript" th:src="@{/view/plugins/jquery/jquery.js}"></script>
+    <script th:src="@{/view/plugins/highlight/highlight.pack.js}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        body {
+            background-color: #eeeeee;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-main {
+            width: 1000px;
+            margin: 10px auto;
+            background-color: white;
+            box-shadow: 5px 5px 5px #888888;
+        }
+
+        .page-title {
+            padding: 5px;
+            text-align: center;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .page-content {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="page-main">
+    <div class="page-title"><h2 th:text="${document.title}"></h2></div>
+    <div class="page-content" th:utext="${document.content}"></div>
+</div>
+</body>
+</html>

@@ -34,18 +34,12 @@
         <el-button size="small" type="primary" icon="el-icon-search" v-on:click="onSearch"></el-button>
       </el-col>
       <el-col :span="5">
-        <el-button-group style="float: right;">
-          <template v-if="this.enableEdit">
-            <el-button size="small" type="warning" icon="el-icon-edit" v-on:click="onEdit"></el-button>
+        <div style="float: right;margin-right: 10px;">
+          <template v-if="enableMove">
+            <el-switch v-model="canMove" @change="onMove"></el-switch>
+            <el-button size="small" type="success" :disabled="!canMove" icon="el-icon-check" v-on:click="onSave" round></el-button>
           </template>
-          <template v-if="this.enableDrop">
-            <el-button size="small" type="danger" icon="el-icon-delete" v-on:click="onDrop"></el-button>
-          </template>
-          <template v-if="this.enableMove">
-            <el-button size="small" type="success" icon="el-icon-caret-top" v-on:click="onMove('up')"></el-button>
-            <el-button size="small" type="success" icon="el-icon-caret-bottom" v-on:click="onMove('down')"></el-button>
-          </template>
-        </el-button-group>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -56,8 +50,6 @@
     name: "my-table-search",
     props: {
       items: {type: Array, default: () => ([])},
-      enableEdit: {type: Boolean, default: false},
-      enableDrop: {type: Boolean, default: false},
       enableMove: {type: Boolean, default: false}
     },
     data() {
@@ -66,6 +58,7 @@
         selectItem: "",
         inputText: null,
         inputDate: null,
+        canMove: false,
         targetItem: {}
       }
     },
@@ -86,16 +79,11 @@
         }
         this.$emit('onSearch', {name: this.targetItem.name, type: this.targetItem.type, value: value});
       },
-      onEdit: function () {
-        this.$emit('onEdit');
-      }
-      ,
-      onDrop: function () {
-        this.$emit('onDrop');
-      }
-      ,
-      onMove: function (val) {
-        this.$emit('onMove', val);
+      onMove: function (value) {
+        this.$emit('onMove', value);
+      },
+      onSave: function () {
+        this.$emit('onSave');
       }
     }
 

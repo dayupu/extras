@@ -1,5 +1,6 @@
 package org.dayup.avatar.jpa.entity;
 
+import org.dayup.avatar.jpa.base.DataSequence;
 import org.dayup.avatar.jpa.base.EntityDate;
 import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.hibernate.annotations.Parameter;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "doc_document")
-public class Document extends EntityDate {
+public class Document extends EntityDate implements DataSequence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,6 +93,7 @@ public class Document extends EntityDate {
         this.library = library;
     }
 
+    @Override
     public Integer getSequence() {
         return sequence;
     }

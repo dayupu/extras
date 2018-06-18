@@ -1,6 +1,7 @@
 package org.dayup.avatar.model.define.page;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.io.Serializable;
 
@@ -16,6 +17,13 @@ public class PageQuery implements Serializable {
             page = new PageInfo();
         }
         return PageRequest.of(this.page.getNum() - 1, this.page.getSize());
+    }
+
+    public PageRequest page(Sort sort) {
+        if (page == null) {
+            page = new PageInfo();
+        }
+        return PageRequest.of(this.page.getNum() - 1, this.page.getSize(), sort);
     }
 
     public OperateSearch getSearch() {

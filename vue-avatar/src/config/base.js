@@ -14,9 +14,11 @@ exports.install = function (Vue, options) {
   Vue.prototype.messageAlert = function (response) {
     if (isSuccess(response.data.code)) {
       this.$message.success(response.data.msg);
+      return true;
     } else {
       this.$message.error(response.data.msg);
     }
+    return false;
   };
 
 };
