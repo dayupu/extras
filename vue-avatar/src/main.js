@@ -18,6 +18,7 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 // custom config
 import {ApiUrls} from './config/apiUrls';
+import Avatar from './config/avatar';
 import Base from './config/base';
 import MyBreadcrumb from './tags/my-breadcrumb.vue';
 import MyTableSearch from './tags/my-table-search.vue';
@@ -55,6 +56,7 @@ Vue.directive('highlight', (el) => {
 });
 // global parameters
 Vue.prototype.ApiUrls = ApiUrls;
+Vue.prototype.avatar = Avatar;
 // Register to global
 Vue.component(MyBreadcrumb.name, MyBreadcrumb);
 Vue.component(MyTableSearch.name, MyTableSearch);

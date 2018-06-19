@@ -14,7 +14,6 @@
       <el-col :span="10">
         <div class="grid-content bg-purple" style="float: right;">
           <el-button type="primary" size="small" @click="onCreateDoc">新建文档</el-button>
-          <el-button type="primary" size="small">新建数据模型</el-button>
           <el-button type="success" size="small" @click="onBack" plain>返回</el-button>
         </div>
       </el-col>

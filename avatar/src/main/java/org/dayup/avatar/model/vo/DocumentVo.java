@@ -10,9 +10,11 @@ public class DocumentVo implements Serializable {
     private String id;
     private String libId;
     private String title;
+    private Integer sequence;
     private String content;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
+    private Integer newSequence;
 
     public String getId() {
         return id;
@@ -60,5 +62,21 @@ public class DocumentVo implements Serializable {
 
     public void setUpdatedOn(LocalDateTime updatedOn) {
         this.updatedOn = updatedOn;
+    }
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
+
+    public Integer getNewSequence() {
+        return newSequence;
+    }
+
+    public void setNewSequence(Integer newSequence) {
+        this.newSequence = newSequence;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -67,9 +68,9 @@ public class DocumentApi extends BaseApi {
 
 
     @PostMapping("/drop")
-    public ResponseInfo drop(@RequestBody List<DocumentVo> documentVos) {
+    public ResponseInfo drop(@RequestBody DocumentVo documentVo) {
         try {
-            documentService.drop(extractIds(documentVos));
+            documentService.drop(extractIds(Arrays.asList(documentVo)));
             return wrapResponse(EMessage.DROP_SUCCESS);
         } catch (CoreException e) {
             return wrapException(e);
@@ -81,11 +82,10 @@ public class DocumentApi extends BaseApi {
 
 
     @PostMapping("/move")
-    public ResponseInfo move(@RequestParam("isUp") Boolean isUp, @RequestBody List<DocumentVo> documentVos) {
+    public ResponseInfo move(@RequestBody List<DocumentVo> documentVos) {
 
         try {
-            isUp = isUp == null ? true : isUp;
-            documentService.move(isUp, extractIds(documentVos));
+            documentService.move(documentVos);
             return wrapResponse(EMessage.MOVE_SUCCESS);
         } catch (CoreException e) {
             return wrapException(e);

@@ -26,9 +26,4 @@ public interface DocumentRepo extends FoolRepository<Document, Long> {
     @Query("from Document where status=:status and id in (:ids)")
     List<Document> findByIds(@Param("ids") List<Long> ids, @Param("status") EDataStatus status);
 
-    Document findTop1ByLibIdAndStatusAndSequenceLessThanOrderBySequenceDesc(Long libId, EDataStatus status, Integer
-            sequence);
-
-    Document findTop1ByLibIdAndStatusAndSequenceGreaterThanOrderBySequenceAsc(Long libId, EDataStatus status, Integer
-            sequence);
 }

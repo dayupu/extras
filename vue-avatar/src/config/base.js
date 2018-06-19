@@ -8,11 +8,14 @@ exports.install = function (Vue, options) {
   };
 
   Vue.prototype.isSuccess = function (code) {
-    return isSuccess(code)
+    if (code == "200") {
+      return true;
+    }
+    return false;
   };
 
   Vue.prototype.messageAlert = function (response) {
-    if (isSuccess(response.data.code)) {
+    if (response.data.code == "200") {
       this.$message.success(response.data.msg);
       return true;
     } else {

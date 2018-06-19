@@ -1,7 +1,5 @@
 package org.dayup.avatar.service.docs.impl;
 
-import org.dayup.avatar.jpa.base.SequenceComparatorASC;
-import org.dayup.avatar.jpa.base.SequenceComparatorDesc;
 import org.dayup.avatar.jpa.entity.Document;
 import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.dayup.avatar.jpa.repository.DocumentRepo;
@@ -21,12 +19,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DocumentServiceImpl implements IDocumentService {
@@ -112,37 +110,15 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Transactional
     @Override
-    public void move(boolean isUp, List<Long> docIds) {
-        List<Document> documents = documentRepo.findByIds(docIds, EDataStatus.INIT);
-        if (CollectionUtils.isEmpty(documents)) {
-            return;
-        }
+    public void move(List<DocumentVo> documentVos) {
 
-        int sequence;
-        if (isUp) {
-            documents.sort(new SequenceComparatorASC());
-            for (Document document : documents) {
-                sequence = document.getSequence() == null ? 0 : document.getSequence();
-                Document top = documentRepo.findTop1ByLibIdAndStatusAndSequenceLessThanOrderBySequenceDesc
-                        (document.getLibId(), EDataStatus.INIT, sequence);
-                if (top == null) {
-                    continue;
-                }
-                document.setSequence(top.getSequence());
-                top.setSequence(sequence);
-            }
-        } else {
-            documents.sort(new SequenceComparatorDesc());
-            for (Document document : documents) {
-                sequence = document.getSequence() == null ? 0 : document.getSequence();
-                Document under = documentRepo.findTop1ByLibIdAndStatusAndSequenceGreaterThanOrderBySequenceAsc
-                        (document.getLibId(), EDataStatus.INIT, sequence);
-                if (under == null) {
-                    continue;
-                }
-                document.setSequence(under.getSequence());
-                under.setSequence(sequence);
-            }
+        Map<Long, DocumentVo> docsMap = new HashMap<>();
+        for (DocumentVo vo : documentVos) {
+            docsMap.put(IDSecure.decode(vo.getId()), vo);
+        }
+        List<Document> documents = documentRepo.findByIds(new ArrayList<>(docsMap.keySet()), EDataStatus.INIT);
+        for (Document document : documents) {
+            document.setSequence(docsMap.get(document.getId()).getNewSequence());
         }
 
     }

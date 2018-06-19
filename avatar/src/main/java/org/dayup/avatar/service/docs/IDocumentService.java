@@ -18,5 +18,5 @@ public interface IDocumentService {
 
     void drop(List<Long> docIds);
 
-    void move(boolean isUp, List<Long> docIds);
+    void move(List<DocumentVo> documentVos);
 }

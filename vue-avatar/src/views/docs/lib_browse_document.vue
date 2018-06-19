@@ -2,15 +2,14 @@
   <div>
     <my-table-search :items="docItems" @onSearch="onSearch" enable-move @onMove="onMove"
                      @onSave="onSave"></my-table-search>
-    <el-table :data="documents" style="width: 100%;" height="580"
-              @row-dblclick="onRowDoubleClick" @selection-change="onSelectChange" stripe>
+    <el-table :data="documents" style="width: 100%;" height="580" @row-dblclick="onRowDoubleClick" stripe>
       <el-table-column label="移动" width="80" header-align="center" align="center" v-if="showMove">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button @click="onMoveColumn(scope.$index,scope.row,true)"
-                       size="mini" icon="el-icon-arrow-up" circle></el-button>
-            <el-button @click="onMoveColumn(scope.$index,scope.row, false)"
-                       size="mini" icon="el-icon-arrow-down" circle></el-button>
+            <el-button @click="onMoveColumn(scope.$index,true)"
+                       size="mini" icon="el-icon-caret-top" circle></el-button>
+            <el-button @click="onMoveColumn(scope.$index, false)"
+                       size="mini" icon="el-icon-caret-bottom" circle></el-button>
           </el-button-group>
         </template>
       </el-table-column>
@@ -19,10 +18,14 @@
       <el-table-column prop="updatedOn" label="更新时间" width="200"></el-table-column>
       <el-table-column label="操作" width="180" fixed="right">
         <template slot-scope="scope">
-          <el-button size="small" type="success" @click="onBrowse(scope.$index, scope.row)"
-                     icon="el-icon-search" plain></el-button>
-          <el-button size="small" type="warning" @click="onEdit(scope.$index, scope.row)"
-                     icon="el-icon-edit" plain></el-button>
+          <el-button-group>
+            <el-button size="small" type="warning" @click="onBrowse(scope.$index, scope.row)"
+                       icon="el-icon-search" round></el-button>
+            <el-button size="small" type="warning" @click="onEdit(scope.$index, scope.row)"
+                       icon="el-icon-edit" round></el-button>
+            <el-button size="small" type="danger" @click="onDrop(scope.$index, scope.row)"
+                       icon="el-icon-delete" round></el-button>
+          </el-button-group>
         </template>
       </el-table-column>
     </el-table>
@@ -48,19 +51,19 @@
     data() {
       return {
         documents: [],
+        changeDocs: [],
         docItems: [
           {title: "标题", name: "title", type: "text"},
           {title: "创建时间", name: "createdOn", type: "datetime"},
           {title: "更新时间", name: "updatedOn", type: "datetime"},
         ],
-        selectRows: [],
         searchParam: {},
         page: {
           num: 1,
           size: 10,
           total: 0
         },
-        showMove: true
+        showMove: false
       }
     },
     created() {
@@ -82,19 +85,13 @@
         this.searchParam = search;
         this.pageSearch();
       },
-      onSelectChange(rows) {
-        this.selectRows = rows;
-      },
-      onDrop() {
-        if (this.selectRows.length == 0) {
-          return;
-        }
+      onDrop(index, row) {
         this.$confirm('此操作将删除选中的文档, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.post(this.ApiUrls.docs.document.drop, this.selectRows).then((response) => {
+          this.$http.post(this.ApiUrls.docs.document.drop, row).then((response) => {
             if (this.messageAlert(response)) {
               this.pageSearch();
             }
@@ -108,29 +105,24 @@
       },
       onMove(value) {
         if (value) {
+          this.changeDocs = [];
           this.showMove = true;
         } else {
           this.showMove = false;
         }
       },
       onSave() {
-
+        this.$http.post(this.ApiUrls.docs.document.move, this.changeDocs).then((response) => {
+          if (this.messageAlert(response)) {
+            this.changeDocs = [];
+          }
+        });
       },
-      onMoveColumn(index, row, isUp) {
-        if (index == 0 && isUp) {
-          return;
+      onMoveColumn(index, isUp) {
+        let swapItems = this.avatar.moveItem(this.documents, index, isUp);
+        if (swapItems.length != 0) {
+          this.avatar.moveSwap(this.changeDocs, swapItems, "id", "sequence");
         }
-        let curCols = this.documents.splice(index, 1);
-        let relateCol = {};
-        if (isUp) {
-          relateCol = this.documents[index - 1];
-          this.documents.splice(index - 1, 0, ...curCols);
-        } else {
-          relateCol = this.documents[index];
-          this.documents.splice(index + 1, 0, ...curCols);
-        }
-
-        alert(relateCol.title);
       },
       onPageSizeChange(val) {
         this.page.size = val;

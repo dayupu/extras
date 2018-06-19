@@ -13,6 +13,7 @@ public class DocumentParser extends BaseParser<Document, DocumentVo> {
         vo.setId(IDSecure.encode(entity.getId()));
         vo.setLibId(IDSecure.encode(entity.getLibId()));
         vo.setTitle(entity.getTitle());
+        vo.setSequence(entity.getSequence());
         vo.setContent(entity.getContent());
         vo.setCreatedOn(entity.getCreatedOn());
         vo.setUpdatedOn(entity.getUpdatedOn());
