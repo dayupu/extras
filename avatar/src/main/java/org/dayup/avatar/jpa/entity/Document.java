@@ -29,7 +29,7 @@ public class Document extends EntityDate implements DataSequence {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "libId", insertable = false, updatable = false)
-    private DocLibrary library;
+    private Library library;
 
     @Column
     private Integer sequence;
@@ -85,11 +85,11 @@ public class Document extends EntityDate implements DataSequence {
         this.libId = libId;
     }
 
-    public DocLibrary getLibrary() {
+    public Library getLibrary() {
         return library;
     }
 
-    public void setLibrary(DocLibrary library) {
+    public void setLibrary(Library library) {
         this.library = library;
     }
 

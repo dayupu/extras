@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "doc_library")
-public class DocLibrary extends EntityDate {
+public class Library extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

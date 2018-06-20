@@ -1,10 +1,9 @@
-package org.dayup.avatar.web.api;
+package org.dayup.avatar.web.api.doc;
 
 import org.dayup.avatar.model.define.ResponseInfo;
-import org.dayup.avatar.model.vo.DocLibraryQuery;
-import org.dayup.avatar.model.vo.DocLibraryVo;
-import org.dayup.avatar.model.vo.DocumentVo;
-import org.dayup.avatar.service.docs.IDocLibraryService;
+import org.dayup.avatar.model.vo.LibraryQuery;
+import org.dayup.avatar.model.vo.LibraryVo;
+import org.dayup.avatar.service.docs.ILibraryService;
 import org.dayup.avatar.service.docs.IDocumentService;
 import org.dayup.avatar.support.BaseApi;
 import org.dayup.avatar.support.common.IDSecure;
@@ -18,17 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 
 @RestController
 @RequestMapping("/vue/docs/lib")
-public class DocLibraryApi extends BaseApi {
+public class LibraryApi extends BaseApi {
 
     @Autowired
-    private IDocLibraryService libraryService;
+    private ILibraryService libraryService;
 
     @Autowired
     private IDocumentService documentService;
@@ -38,8 +33,8 @@ public class DocLibraryApi extends BaseApi {
 
         try {
             Long id = IDSecure.decode(encodeId);
-            DocLibraryVo docLibraryVo = libraryService.getLibrary(id);
-            return wrapSuccess(docLibraryVo);
+            LibraryVo libraryVo = libraryService.getLibrary(id);
+            return wrapSuccess(libraryVo);
         } catch (CoreException e) {
             return wrapException(e);
         } catch (Exception e) {
@@ -48,9 +43,9 @@ public class DocLibraryApi extends BaseApi {
     }
 
     @PostMapping("/create")
-    public ResponseInfo create(@RequestBody DocLibraryVo docLibraryVo) {
+    public ResponseInfo create(@RequestBody LibraryVo libraryVo) {
         try {
-            libraryService.save(docLibraryVo);
+            libraryService.save(libraryVo);
             return wrapResponse(EMessage.SAVE_SUCCESS);
         } catch (CoreException e) {
             return wrapException(e);
@@ -61,7 +56,7 @@ public class DocLibraryApi extends BaseApi {
 
 
     @PostMapping("/search")
-    public ResponseInfo search(@RequestBody DocLibraryQuery query) {
+    public ResponseInfo search(@RequestBody LibraryQuery query) {
         return wrapSuccess(libraryService.search(query));
     }
 

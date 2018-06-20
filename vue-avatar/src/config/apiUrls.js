@@ -1,5 +1,5 @@
 let localhostDev = true;
-let _host = localhostDev ? 'http://127.0.0.1/vue' : 'http://xxx.com/vue';
+let _host = localhostDev ? 'http://192.168.100.107/vue' : 'http://xxx.com/vue';
 let ApiUrls = {
   docs: {
     library: {
@@ -14,6 +14,9 @@ let ApiUrls = {
       search: _host + '/docs/doc/search',
       drop: _host + '/docs/doc/drop',
       move: _host + '/docs/doc/move',
+    },
+    model: {
+      types: _host + '/docs/model/types'
     }
   }
 };

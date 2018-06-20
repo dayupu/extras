@@ -4,7 +4,7 @@ package org.dayup.avatar.model.vo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class DocLibraryVo implements Serializable {
+public class LibraryVo implements Serializable {
 
     private static final long serialVersionUID = 646259566741158909L;
     private String id;

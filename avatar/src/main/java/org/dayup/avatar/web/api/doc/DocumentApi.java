@@ -1,4 +1,4 @@
-package org.dayup.avatar.web.api;
+package org.dayup.avatar.web.api.doc;
 
 import org.dayup.avatar.model.define.ResponseInfo;
 import org.dayup.avatar.model.vo.DocumentQuery;

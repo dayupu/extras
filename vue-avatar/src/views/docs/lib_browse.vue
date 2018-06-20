@@ -23,7 +23,7 @@
         <documentList v-bind:lib-id="id" ref="documentList"></documentList>
       </el-tab-pane>
       <el-tab-pane label="数据模型" name="second">
-        <modelList ref="modelList"></modelList>
+        <modelList v-bind:lib-id="id" ref="modelList"></modelList>
       </el-tab-pane>
     </el-tabs>
   </div>

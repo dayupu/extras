@@ -2,7 +2,7 @@
   <div>
     <my-table-search :items="docItems" @onSearch="onSearch" enable-move @onMove="onMove"
                      @onSave="onSave"></my-table-search>
-    <el-table :data="documents" style="width: 100%;" height="580" @row-dblclick="onRowDoubleClick" stripe>
+    <el-table :data="documents" style="width: 100%;" height="500" @row-dblclick="onRowDoubleClick" size="small" stripe>
       <el-table-column label="移动" width="80" header-align="center" align="center" v-if="showMove">
         <template slot-scope="scope">
           <el-button-group>
@@ -19,11 +19,11 @@
       <el-table-column label="操作" width="180" fixed="right">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button size="small" type="warning" @click="onBrowse(scope.$index, scope.row)"
+            <el-button size="mini" type="warning" @click="onBrowse(scope.$index, scope.row)"
                        icon="el-icon-search" round></el-button>
-            <el-button size="small" type="warning" @click="onEdit(scope.$index, scope.row)"
+            <el-button size="mini" type="warning" @click="onEdit(scope.$index, scope.row)"
                        icon="el-icon-edit" round></el-button>
-            <el-button size="small" type="danger" @click="onDrop(scope.$index, scope.row)"
+            <el-button size="mini" type="danger" @click="onDrop(scope.$index, scope.row)"
                        icon="el-icon-delete" round></el-button>
           </el-button-group>
         </template>
