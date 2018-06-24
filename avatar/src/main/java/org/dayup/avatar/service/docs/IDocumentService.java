@@ -1,8 +1,9 @@
+
 package org.dayup.avatar.service.docs;
 
-import org.dayup.avatar.model.define.page.PageResult;
-import org.dayup.avatar.model.vo.DocumentQuery;
-import org.dayup.avatar.model.vo.DocumentVo;
+import org.dayup.avatar.base.refs.page.PageResult;
+import org.dayup.avatar.web.model.vo.DocumentQuery;
+import org.dayup.avatar.web.model.vo.DocumentVo;
 
 import java.util.List;
 

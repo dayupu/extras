@@ -1,3 +1,4 @@
+
 package org.dayup.avatar.jpa.entity;
 
 import org.dayup.avatar.jpa.base.DataSequence;
@@ -6,6 +7,7 @@ import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,7 +16,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "doc_document")
@@ -25,25 +30,22 @@ public class Document extends EntityDate implements DataSequence {
     private Long id;
 
     @Column(nullable = false)
-    private Long libId;
+    private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "libId", insertable = false, updatable = false)
-    private Library library;
+    @Column
+    private String description;
 
     @Column
     private Integer sequence;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column(columnDefinition = "Text")
-    private String content;
-
     @Column
     @Type(type = "org.dayup.avatar.jpa.base.DBEnumType", parameters = {
-            @Parameter(name = "enumClass", value = "org.dayup.avatar.jpa.enums.EDataStatus") })
+            @Parameter(name = "enumClass", value = "org.dayup.avatar.jpa.enums.EDataStatus")})
     private EDataStatus status;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "document")
+    @OrderBy("sequence asc")
+    private List<Segment> segments;
 
     public Long getId() {
         return id;
@@ -61,12 +63,12 @@ public class Document extends EntityDate implements DataSequence {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescription() {
+        return description;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public EDataStatus getStatus() {
@@ -75,22 +77,6 @@ public class Document extends EntityDate implements DataSequence {
 
     public void setStatus(EDataStatus status) {
         this.status = status;
-    }
-
-    public Long getLibId() {
-        return libId;
-    }
-
-    public void setLibId(Long libId) {
-        this.libId = libId;
-    }
-
-    public Library getLibrary() {
-        return library;
-    }
-
-    public void setLibrary(Library library) {
-        this.library = library;
     }
 
     @Override

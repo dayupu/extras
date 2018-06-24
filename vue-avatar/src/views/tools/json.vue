@@ -5,10 +5,9 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {locations: [{name: "工具箱"}, {name: "Json格式化"}]}
-    }
-
+export default {
+  data() {
+    return { locations: [{ name: "工具箱" }, { name: "Json格式化" }] };
   }
+};
 </script>

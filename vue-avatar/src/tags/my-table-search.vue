@@ -35,9 +35,10 @@
       </el-col>
       <el-col :span="5">
         <div style="float: right;margin-right: 10px;">
-          <template v-if="enableMove">
-            <el-switch v-model="canMove" @change="onMove"></el-switch>
-            <el-button size="small" type="success" :disabled="!canMove" icon="el-icon-check" v-on:click="onSave" round></el-button>
+          <template v-if="showButton">
+            <el-switch v-model="switchOn" @change="onSwitch"></el-switch>
+            <el-button size="small" type="success" :disabled="!switchOn" icon="el-icon-check" v-on:click="onSubmit"
+                       round></el-button>
           </template>
         </div>
       </el-col>
@@ -50,7 +51,7 @@
     name: "my-table-search",
     props: {
       items: {type: Array, default: () => ([])},
-      enableMove: {type: Boolean, default: false}
+      showButton: {type: Boolean, default: false}
     },
     data() {
       return {
@@ -58,7 +59,7 @@
         selectItem: "",
         inputText: null,
         inputDate: null,
-        canMove: false,
+        switchOn: false,
         targetItem: {}
       }
     },
@@ -79,11 +80,11 @@
         }
         this.$emit('onSearch', {name: this.targetItem.name, type: this.targetItem.type, value: value});
       },
-      onMove: function (value) {
-        this.$emit('onMove', value);
+      onSwitch: function () {
+        this.$emit('onSwitch', this.switchOn);
       },
-      onSave: function () {
-        this.$emit('onSave');
+      onSubmit: function () {
+        this.$emit('onSubmit');
       }
     }
 

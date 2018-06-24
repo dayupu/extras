@@ -1,4 +1,4 @@
-package org.dayup.kits.avatar.web.config;
+package org.dayup.avatar.web.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

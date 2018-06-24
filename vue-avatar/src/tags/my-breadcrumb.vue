@@ -1,14 +1,14 @@
 <template>
   <el-breadcrumb separator-class="el-icon-arrow-right" class="my-breadcrumb">
-    <el-breadcrumb-item><i class="el-icon-location"></i></el-breadcrumb-item>
-    <el-breadcrumb-item v-for="item of items" style="font-size: 13px">
-      <template v-if="item.path && item.path != null">
-        <a v-bind:href="'#' + item.path"> {{item.name}}</a>
-      </template>
-      <template v-else>
-        {{item.name}}
-      </template>
-    </el-breadcrumb-item>
+    <!--<el-breadcrumb-item><i class="el-icon-location"></i></el-breadcrumb-item>-->
+    <!--<el-breadcrumb-item v-for="item of items" style="font-size: 13px">-->
+      <!--<template v-if="item.path && item.path != null">-->
+        <!--<a v-bind:href="'#' + item.path"> {{item.name}}</a>-->
+      <!--</template>-->
+      <!--<template v-else>-->
+        <!--{{item.name}}-->
+      <!--</template>-->
+    <!--</el-breadcrumb-item>-->
   </el-breadcrumb>
 </template>
 

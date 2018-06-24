@@ -3,13 +3,13 @@ package org.dayup.avatar.jpa.enums;
 
 import org.dayup.avatar.jpa.base.DBEnum;
 
-public enum EDataStatus implements DBEnum {
+public enum ESegmentType implements DBEnum {
 
-    INIT(0), DELETED(3);
+    MARKDOWN(1), MODEL(2), HTML(3);
 
     private Integer constant;
 
-    EDataStatus(Integer constant) {
+    ESegmentType(Integer constant) {
         this.constant = constant;
     }
 

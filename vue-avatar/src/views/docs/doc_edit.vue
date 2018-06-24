@@ -1,31 +1,39 @@
 <template>
-
   <el-container>
-    <el-header style="height: 80px;">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{name:'docs'}"><i class="fa fa-file"></i>&nbsp;&nbsp;文档库</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{name:'libraryBrowse',params: {id: library.id}}">{{library.name}}</el-breadcrumb-item>
-        <el-breadcrumb-item></el-breadcrumb-item>
-      </el-breadcrumb>
-      <br/>
-      <el-row :gutter="20">
-        <el-col :span="20">
-          <div class="grid-content bg-purple">
-            <el-input placeholder="请输入标题" size="small" style="width: 300px;" v-model="document.title">
-              <template slot="prepend">标题</template>
-            </el-input>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-            <el-button type="primary" size="small" @click="saveDoc">保存</el-button>
-            <el-button size="small" @click="handleCancel">取消</el-button>
-          </div>
-        </el-col>
-      </el-row>
-    </el-header>
-    <el-main>
-      <mavon-editor :ishljs="true" style="min-height: 700px;" v-model="document.content" @save="saveMarkdown"></mavon-editor>
+
+    <el-aside width="200px" class="segment-tree">
+      <el-tree
+        :data="segmentTree"
+        :prop="treeProps"
+        ref="segment"
+        node-key="id"
+        :expand-on-click-node="false"
+        @node-expand="treeNodeExpand"
+        @node-click="treeNodeClick"
+        highlight-current
+        default-expand-all
+        style="background-color: #eeeeee">
+        <span class="custom-tree-node" slot-scope="{ node, data }">
+           <span>{{ node.label }}</span>&nbsp;
+           <span v-if="node.level <= 2">
+              <el-dropdown size="small" placement="bottom-start" @command="treeNodeCommand" trigger="click">
+                <span>
+                  <i class="el-icon-arrow-down node-arrow"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="{type:'add',node:node,data:data}">添加</el-dropdown-item>
+                  <el-dropdown-item :command="{type:'drop',node:node,data:data}">删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+           </span>
+        </span>
+      </el-tree>
+      <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+
+      </el-dialog>
+    </el-aside>
+    <el-main class="segment-content">
+      <router-view></router-view>
     </el-main>
   </el-container>
 </template>
@@ -34,51 +42,105 @@
   export default {
     name: "doc_edit",
     data() {
+      const data = [{
+        id: 1,
+        label: '一级 1',
+        children: [{
+          id: 4,
+          label: '二级 1-1',
+          children: [{
+            id: 9,
+            label: '三级 1-1-1'
+          }, {
+            id: 10,
+            label: '三级 1-1-2'
+          }]
+        }]
+      }, {
+        id: 2,
+        label: '一级 2',
+        children: [{
+          id: 5,
+          label: '二级 2-1'
+        }, {
+          id: 6,
+          label: '二级 2-2'
+        }]
+      }, {
+        id: 3,
+        label: '一级 3',
+        children: [{
+          id: 7,
+          label: '二级 3-1'
+        }, {
+          id: 8,
+          label: '二级 3-2'
+        }]
+      }];
       return {
-        libId: this.$route.params.libId,
-        paramId: this.$route.params.id,
-        library: {},
-        document: {}
-      }
+        dialogFormVisible: false,
+        treeProps: {
+          label: 'label',
+          children: 'children',
+          isLeaf: 'leaf'
+        },
+        segmentTree: JSON.parse(JSON.stringify(data))
+      };
     },
     created() {
-      this.$http.get(this.ApiUrls.docs.library.browse, {params: {id: this.libId}}).then((response) => {
-        this.library = response.data.data;
-      });
-      if (this.paramId != "new") {
-        this.$http.get(this.ApiUrls.docs.document.browse, {params: {id: this.paramId}}).then((response) => {
-          this.document = response.data.data;
-        });
-      }
-
-
+      var _this = this;
+      this.$bus.$on("changeTitle", _this.changeTitle);
+    },
+    beforeDestroy() {
+      var _this = this;
+      this.$bus.off('changeTitle', _this.changeTitle);
     },
     methods: {
-      saveDoc() {
-        this.document.libId = this.libId;
-        this.$http.post(this.ApiUrls.docs.document.save, this.document).then((response) => {
-          this.messageAlert(response);
-          if (!this.isSuccess(response.data.code)) {
-            return;
-          }
-          this.document = response.data.data;
-          if (this.paramId == "new") {
-            this.$router.push({name: "documentEdit", params: {libId: this.libId, id: this.document.id}});
-          }
-        })
+      changeTitle(title) {
+        var node = this.$refs.segment.getNode(1);
+        console.log(node.label);
+        alert(title);
       },
-      handleCancel() {
-        this.$router.push({name: 'libraryBrowse', params: {id: this.libId}});
+      treeNodeExpand(data, node, self) {
+        // alert(3);
       },
-      saveMarkdown(){
-        this.saveDoc();
+      treeNodeClick(data, node, self) {
+        console.log(data);
+        console.log(node);
+        this.$router.push({name: "segmentEdit", params: {segId: "xxx"}})
+      },
+      treeNodeCommand(command) {
+        var data = command.data;
+        if (command.type == "add") {
+          this.dialogFormVisible = true;
+          return;
+        }
+        const newChild = {id: '111', label: 'testtest', children: []};
+        if (!data.children) {
+          this.$set(data, 'children', []);
+        }
+        data.children.push(newChild);
       }
     }
   }
 </script>
 
 <style scoped>
-  .el-main {
-    background-color: #eee;
+  .segment-tree {
+    min-height: 300px;
+  }
+
+  .segment-content {
+    background-color: white;
+    min-height: 500px;
+  }
+
+  .custom-tree-node {
+    font-size: 14px;
+  }
+
+  .node-arrow {
+    font-size: 10px;
+    line-height: 30px;
   }
 </style>

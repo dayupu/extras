@@ -16,6 +16,8 @@ import 'mavon-editor/dist/css/index.css';
 import VueMarkdown from 'vue-markdown';
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
+// content menu
+import VueBus from 'vue-bus';
 // custom config
 import {ApiUrls} from './config/apiUrls';
 import Avatar from './config/avatar';
@@ -30,6 +32,8 @@ Vue.use(ElementUI);
 Vue.use(mavonEditor);
 Vue.use(VueResource);
 Vue.use(Base);
+Vue.use(VueBus);
+
 Vue.directive('highlight', (el) => {
   var markdownStyle = function (el) {
     let blocks = el.querySelectorAll('pre code');

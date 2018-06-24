@@ -1,6 +1,7 @@
+
 package org.dayup.avatar.jpa.config;
 
-import org.dayup.avatar.support.fool.FoolRepositoryImpl;
+import org.dayup.avatar.base.plugins.fool.FoolRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;

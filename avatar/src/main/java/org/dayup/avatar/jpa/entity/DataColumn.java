@@ -1,3 +1,4 @@
+
 package org.dayup.avatar.jpa.entity;
 
 import org.dayup.avatar.jpa.enums.ERequired;
@@ -26,15 +27,18 @@ public class DataColumn {
     @Column(nullable = false)
     private String name;
 
-    @Column
-    private Boolean isList = Boolean.FALSE;
-
     @Column(insertable = false, updatable = false)
     private Long classId;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = { CascadeType.ALL })
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "classId")
     private DataClass dataClass;
+
+    @Column
+    private Boolean isList = Boolean.FALSE;
+
+    @Column
+    private Long typeId;
 
     @Column
     private Integer sequence;
@@ -50,7 +54,7 @@ public class DataColumn {
 
     @Column
     @Type(type = "org.dayup.avatar.jpa.base.DBEnumType", parameters = {
-            @Parameter(name = "enumClass", value = "org.dayup.avatar.jpa.enums.ERequired") })
+            @Parameter(name = "enumClass", value = "org.dayup.avatar.jpa.enums.ERequired")})
     private ERequired required = ERequired.NO;
 
     public Long getId() {
@@ -133,5 +137,11 @@ public class DataColumn {
         this.required = required;
     }
 
+    public Long getTypeId() {
+        return typeId;
+    }
 
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
 }

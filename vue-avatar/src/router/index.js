@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {Tools, Docs} from "@/config/menus";
+import { Tools, Docs } from "@/config/menus";
 
 Vue.use(Router);
-Vue.prototype.moduleMenus = {tools: Tools, docs: Docs};
+Vue.prototype.moduleMenus = { tools: Tools, docs: Docs };
 export default new Router({
   routes: [
     {
@@ -15,13 +15,13 @@ export default new Router({
       path: '/docs',
       name: '文档库',
       component: require('@/views/docs/zhome.vue').default,
-      children: [{path: "/", name: "docs", component: require('@/views/docs/zdocs.vue').default}, ...Docs.subMenus]
+      children: [{ path: "/", name: "docs", component: require('@/views/docs/doc_main.vue').default }, ...Docs.subMenus]
     },
     {
       path: '/tools',
       name: '工具箱',
       component: require('@/views/tools/zhome.vue').default,
-      children: [{path: "/", component: require('@/views/tools/zdefault.vue').default}, ...Tools.subMenus]
+      children: [{ path: "/", component: require('@/views/tools/zdefault.vue').default }, ...Tools.subMenus]
     },
     {
       path: '*',

@@ -1,13 +1,14 @@
+
 package org.dayup.avatar.web.api.doc;
 
-import org.dayup.avatar.model.define.ResponseInfo;
-import org.dayup.avatar.model.vo.DocumentQuery;
-import org.dayup.avatar.model.vo.DocumentVo;
+import org.dayup.avatar.base.refs.ResponseInfo;
+import org.dayup.avatar.web.model.vo.DocumentQuery;
+import org.dayup.avatar.web.model.vo.DocumentVo;
 import org.dayup.avatar.service.docs.IDocumentService;
-import org.dayup.avatar.support.BaseApi;
-import org.dayup.avatar.support.common.IDSecure;
-import org.dayup.avatar.support.constants.EMessage;
-import org.dayup.avatar.support.exceptions.CoreException;
+import org.dayup.avatar.base.refs.BaseApi;
+import org.dayup.avatar.base.utils.IDSecure;
+import org.dayup.avatar.base.refs.EMessage;
+import org.dayup.avatar.base.exceptions.CoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

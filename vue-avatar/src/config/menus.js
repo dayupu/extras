@@ -4,24 +4,21 @@ const Docs = {
   basePath: "/docs/",
   subMenus: [
     {
-      name: "libraryCreate",
-      path: "create",
-      component: require("@/views/docs/lib_create.vue").default
-    },
-    {
-      name: "libraryBrowse",
-      path: ":id",
-      component: require("@/views/docs/lib_browse.vue").default
-    },
-    // {
-    //   name: "documentBrowse",
-    //   path: ":libId/:id",
-    //   component: require("@/views/docs/doc_browse.vue").default
-    // },
-    {
-      name: "documentEdit",
-      path: ":libId/:id/edit",
-      component: require("@/views/docs/doc_edit.vue").default
+      name: "docEdit",
+      path: ":docId",
+      component: require("@/views/docs/doc_edit.vue").default,
+      children: [
+        {
+          name: "segmentEdit",
+          path: ":segId/edit",
+          component: require("@/views/docs/segment_edit.vue").default
+        },
+        {
+          name: "segmentBrowse",
+          path: ":segId/browse",
+          component: require("@/views/docs/segment_browse.vue").default
+        }
+      ]
     }
   ]
 };

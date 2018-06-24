@@ -6,6 +6,23 @@ export default {
       return s.toUpperCase();
     });
   },
+  isEmpty(value) {
+    if (typeof value == "string") {
+      return value.length == 0;
+    }
+    return true;
+  },
+  itemRender(items, opItem, propKey) {
+    let index = -1;
+    for (let item of items) {
+      index++;
+      if (item[propKey] == opItem[propKey]) {
+        items.splice(index, 1, opItem);
+        return opItem;
+      }
+    }
+    return opItem;
+  },
   moveItem(items, index, isUp) {
     if ((index == 0 && isUp) || (index == items.length - 1 && !isUp)) {
       return []
@@ -49,10 +66,10 @@ export default {
     }
 
     if (!found1) {
-      changeItems.push({...item1, [propNewSeq]: seq2});
+      changeItems.push({ ...item1, [propNewSeq]: seq2 });
     }
     if (!found2) {
-      changeItems.push({...item2, [propNewSeq]: seq1});
+      changeItems.push({ ...item2, [propNewSeq]: seq1 });
     }
     return changeItems;
   }
