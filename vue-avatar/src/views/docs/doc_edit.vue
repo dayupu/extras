@@ -1,18 +1,20 @@
 <template>
   <el-container>
 
-    <el-aside width="200px" class="segment-tree">
-      <el-tree
-        :data="segmentTree"
-        :prop="treeProps"
-        ref="segment"
-        node-key="id"
-        :expand-on-click-node="false"
-        @node-expand="treeNodeExpand"
-        @node-click="treeNodeClick"
-        highlight-current
-        default-expand-all
-        style="background-color: #eeeeee">
+    <el-aside width="250px" class="segment-tree">
+      <el-tabs active-name="catalog">
+        <el-tab-pane label="目录" name="catalog">
+          <el-tree
+            :data="segmentTree"
+            :prop="treeProps"
+            ref="segment"
+            node-key="id"
+            :expand-on-click-node="false"
+            @node-expand="treeNodeExpand"
+            @node-click="treeNodeClick"
+            highlight-current
+            default-expand-all
+            style="background-color: #eeeeee">
         <span class="custom-tree-node" slot-scope="{ node, data }">
            <span>{{ node.label }}</span>&nbsp;
            <span v-if="node.level <= 2">
@@ -27,9 +29,28 @@
               </el-dropdown>
            </span>
         </span>
-      </el-tree>
-      <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+          </el-tree>
+        </el-tab-pane>
+        <el-tab-pane label="搜索" name="search">搜索</el-tab-pane>
+      </el-tabs>
 
+      <el-dialog title="新建文章" :visible.sync="dialog.visible" width="600px">
+        <el-form :model="dialog.segment" label-width="80px">
+          <el-form-item label="文章名称">
+            <el-input v-model="dialog.segment.title" style="width: 350px;"></el-input>
+          </el-form-item>
+          <el-form-item label="文章类型">
+            <el-select v-model="dialog.segment.type" placeholder="请选择文章类型">
+              <el-option label="Markdown" value="1"></el-option>
+              <el-option label="数据模型" value="2"></el-option>
+              <el-option label="HTML" value="3"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialog.visible = false">取 消</el-button>
+          <el-button type="primary" @click="submitSegment">确 定</el-button>
+        </div>
       </el-dialog>
     </el-aside>
     <el-main class="segment-content">
@@ -42,52 +63,23 @@
   export default {
     name: "doc_edit",
     data() {
-      const data = [{
-        id: 1,
-        label: '一级 1',
-        children: [{
-          id: 4,
-          label: '二级 1-1',
-          children: [{
-            id: 9,
-            label: '三级 1-1-1'
-          }, {
-            id: 10,
-            label: '三级 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }];
+
       return {
-        dialogFormVisible: false,
+        curData: {},
+        dialog: {visible: false, segment: {}},
+        docId: this.$route.params.docId,
         treeProps: {
           label: 'label',
           children: 'children',
           isLeaf: 'leaf'
         },
-        segmentTree: JSON.parse(JSON.stringify(data))
+        segmentTree: []
       };
     },
     created() {
+      this.$http.get(this.ApiUrls.docs.document.segTree, {params: {docId: this.docId}}).then((response) => {
+        this.segmentTree = response.data.data;
+      });
       var _this = this;
       this.$bus.$on("changeTitle", _this.changeTitle);
     },
@@ -105,21 +97,31 @@
         // alert(3);
       },
       treeNodeClick(data, node, self) {
-        console.log(data);
-        console.log(node);
-        this.$router.push({name: "segmentEdit", params: {segId: "xxx"}})
+        this.$router.push({name: "segmentEdit", params: {segId: node.key, title: node.label}})
       },
       treeNodeCommand(command) {
-        var data = command.data;
         if (command.type == "add") {
-          this.dialogFormVisible = true;
+          this.dialog.visible = true;
+          this.curData = command.data;
           return;
         }
-        const newChild = {id: '111', label: 'testtest', children: []};
-        if (!data.children) {
-          this.$set(data, 'children', []);
-        }
-        data.children.push(newChild);
+      },
+      submitSegment() {
+        this.dialog.segment.docId = this.docId;
+        this.dialog.segment.pid = this.curData.id;
+        this.$http.post(this.ApiUrls.docs.segment.save, this.dialog.segment).then((response) => {
+          console.log(response);
+          if (this.isSuccess(response.data.code)) {
+            var segment = response.data.data;
+            const newChild = {id: segment.id, label: segment.title, children: []};
+            if (!this.curData.children) {
+              this.$set(this.curData, 'children', []);
+            }
+            this.curData.children.push(newChild);
+            this.dialog.visible = false;
+            this.dialog.segment = {};
+          }
+        });
       }
     }
   }

@@ -87,4 +87,12 @@ public class Document extends EntityDate implements DataSequence {
     public void setSequence(Integer sequence) {
         this.sequence = sequence;
     }
+
+    public List<Segment> getSegments() {
+        return segments;
+    }
+
+    public void setSegments(List<Segment> segments) {
+        this.segments = segments;
+    }
 }

@@ -13,6 +13,16 @@ public enum ESegmentType implements DBEnum {
         this.constant = constant;
     }
 
+
+    public static ESegmentType fromConstant(Integer constant) {
+        for (ESegmentType segmentType : ESegmentType.values()) {
+            if (segmentType.getConstant().equals(constant)) {
+                return segmentType;
+            }
+        }
+        return null;
+    }
+
     @Override
     public Integer getConstant() {
         return constant;

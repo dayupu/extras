@@ -8,6 +8,7 @@ import org.dayup.avatar.jpa.enums.ESegmentType;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +17,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "doc_segment")
@@ -37,7 +41,7 @@ public class Segment extends EntityDate implements DataSequence {
     private Long pid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pid", insertable = false, updatable = false)
+    @JoinColumn(name = "pid")
     private Segment parent;
 
     @Column
@@ -62,6 +66,9 @@ public class Segment extends EntityDate implements DataSequence {
             @Parameter(name = "enumClass", value = "org.dayup.avatar.jpa.enums.EDataStatus")})
     private EDataStatus status;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "parent")
+    @OrderBy("sequence asc")
+    private List<Segment> childrens;
 
     public Long getId() {
         return id;
@@ -85,6 +92,22 @@ public class Segment extends EntityDate implements DataSequence {
 
     public void setDocument(Document document) {
         this.document = document;
+    }
+
+    public Long getPid() {
+        return pid;
+    }
+
+    public void setPid(Long pid) {
+        this.pid = pid;
+    }
+
+    public Segment getParent() {
+        return parent;
+    }
+
+    public void setParent(Segment parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -134,5 +157,13 @@ public class Segment extends EntityDate implements DataSequence {
 
     public void setStatus(EDataStatus status) {
         this.status = status;
+    }
+
+    public List<Segment> getChildrens() {
+        return childrens;
+    }
+
+    public void setChildrens(List<Segment> childrens) {
+        this.childrens = childrens;
     }
 }

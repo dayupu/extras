@@ -1,6 +1,14 @@
 import Vue from 'vue'
 
 export default {
+
+  guid() {
+    function S4() {
+      return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    }
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+  },
+
   firstUpperCase(value) {
     return value.replace(/^\w/, function (s) {
       return s.toUpperCase();
@@ -66,10 +74,10 @@ export default {
     }
 
     if (!found1) {
-      changeItems.push({ ...item1, [propNewSeq]: seq2 });
+      changeItems.push({...item1, [propNewSeq]: seq2});
     }
     if (!found2) {
-      changeItems.push({ ...item2, [propNewSeq]: seq1 });
+      changeItems.push({...item2, [propNewSeq]: seq1});
     }
     return changeItems;
   }

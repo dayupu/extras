@@ -2,10 +2,12 @@
 package org.dayup.avatar.service.docs.impl;
 
 import org.dayup.avatar.jpa.entity.Document;
+import org.dayup.avatar.jpa.entity.Segment;
 import org.dayup.avatar.jpa.enums.EDataStatus;
 import org.dayup.avatar.jpa.repository.DocumentRepo;
 import org.dayup.avatar.base.refs.page.OperateSearch;
 import org.dayup.avatar.base.refs.page.PageResult;
+import org.dayup.avatar.jpa.repository.SegmentRepo;
 import org.dayup.avatar.web.model.parser.DocumentParser;
 import org.dayup.avatar.web.model.vo.DocumentQuery;
 import org.dayup.avatar.web.model.vo.DocumentVo;
@@ -15,11 +17,13 @@ import org.dayup.avatar.base.refs.EMessage;
 import org.dayup.avatar.base.exceptions.BusinessException;
 import org.dayup.avatar.base.plugins.fool.model.FoolCondition;
 import org.dayup.avatar.base.plugins.fool.model.FoolQuery;
+import org.dayup.avatar.web.model.vo.SegTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -33,6 +37,9 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Autowired
     private DocumentRepo documentRepo;
+
+    @Autowired
+    private SegmentRepo segmentRepo;
 
     private DocumentParser documentParser = new DocumentParser();
 
@@ -119,5 +126,35 @@ public class DocumentServiceImpl implements IDocumentService {
             document.setSequence(docsMap.get(document.getId()).getSequenceNew());
         }
 
+    }
+
+    @Override
+    @Transactional
+    public List<SegTree> getSegmentTree(Long docId) {
+
+        Document document = documentRepo.getOne(docId);
+        List<Segment> segments = document.getSegments();
+        if (CollectionUtils.isEmpty(segments)) {
+            return null;
+        }
+
+        return getSegTrees(segments, new ArrayList<>());
+    }
+
+    private List<SegTree> getSegTrees(List<Segment> segments, List<SegTree> segTrees) {
+        if (CollectionUtils.isEmpty(segments)) {
+            return segTrees;
+        }
+
+        SegTree tree;
+        for (Segment segment : segments) {
+            tree = new SegTree();
+            tree.setId(IDSecure.encode(segment.getId()));
+            tree.setLabel(segment.getTitle());
+            tree.setChildren(getSegTrees(segment.getChildrens(), new ArrayList<>()));
+            segTrees.add(tree);
+        }
+
+        return segTrees;
     }
 }

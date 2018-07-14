@@ -4,6 +4,7 @@ package org.dayup.avatar.service.docs;
 import org.dayup.avatar.base.refs.page.PageResult;
 import org.dayup.avatar.web.model.vo.DocumentQuery;
 import org.dayup.avatar.web.model.vo.DocumentVo;
+import org.dayup.avatar.web.model.vo.SegTree;
 
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface IDocumentService {
     void drop(List<Long> docIds);
 
     void move(List<DocumentVo> documentVos);
+
+    List<SegTree> getSegmentTree(Long docId);
+
+
 }

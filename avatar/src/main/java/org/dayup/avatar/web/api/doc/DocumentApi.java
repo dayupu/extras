@@ -9,6 +9,7 @@ import org.dayup.avatar.base.refs.BaseApi;
 import org.dayup.avatar.base.utils.IDSecure;
 import org.dayup.avatar.base.refs.EMessage;
 import org.dayup.avatar.base.exceptions.CoreException;
+import org.dayup.avatar.web.model.vo.SegTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,26 @@ public class DocumentApi extends BaseApi {
         try {
             documentService.move(documentVos);
             return wrapResponse(EMessage.MOVE_SUCCESS);
+        } catch (CoreException e) {
+            return wrapException(e);
+        } catch (Exception e) {
+            LOGGER.error("system error", e);
+            return wrapError();
+        }
+    }
+
+    @GetMapping("/segTree")
+    public ResponseInfo segmentTree(@RequestParam("docId") String encodeId) {
+
+        try {
+            Long id = IDSecure.decode(encodeId);
+            List<SegTree> segTrees = new ArrayList<>();
+            SegTree root = new SegTree();
+            root.setId("home");
+            root.setLabel("HOME");
+            root.setChildren(documentService.getSegmentTree(id));
+            segTrees.add(root);
+            return wrapSuccess(segTrees);
         } catch (CoreException e) {
             return wrapException(e);
         } catch (Exception e) {
