@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		    http://www.springframework.org/schema/data/jpa
+		    http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="url" value="${datasource.core.url}"/>
+        <property name="username" value="${datasource.core.username}"/>
+        <property name="password" value="${datasource.core.password}"/>
+        <property name="driverClassName" value="${datasource.core.driverClassName}"/>
+        <property name="maxActive" value="${datasource.core.maxActive}"/>
+        <property name="initialSize" value="${datasource.core.initialSize}"/>
+        <property name="minIdle" value="${datasource.core.minIdle}"/>
+        <property name="maxWait" value="${datasource.core.maxWait}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${datasource.core.timeBetweenEvictionRunsMillis}"/>
+    </bean>
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <!-- 注入连接池 -->
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+        </property>
+        <property name="packagesToScan" value="org.dayup.fun.aide.jpa.entity"></property>
+        <!-- 加载hibernate配置文件 -->
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.ejb.naming_strategy">
+                    org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"></property>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <jpa:repositories base-package="org.dayup.fun.aide.jpa.repository"
+                      base-class="org.dayup.fun.aide.jpa.extend.fool.FoolRepositoryImpl"
+                      entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+</beans>

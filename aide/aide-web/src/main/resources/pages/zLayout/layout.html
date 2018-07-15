@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{static/plugins/amaze-ui/css/amazeui.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{static/app.css}"/>
+</head>
+<body>
+<header>
+    <button type="button" class="am-btn am-btn-primary">主色按钮</button>
+</header>
+<div class="container" layout:fragment="content"></div>
+<footer>
+    footer
+</footer>
+</body>
+</html>

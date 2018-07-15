@@ -1,0 +1,12 @@
+spring:
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+  thymeleaf:
+    cache: false
+    enabled: true
+    prefix: classpath:/pages/
+    suffix: .html
+    mode: LEGACYHTML5
+server:
+  port: 9090
