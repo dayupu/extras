@@ -1,0 +1,42 @@
+[
+  {
+    "title": "格式化/美化",
+    "type": "folder",
+    "products": [
+      {
+        "title": "JSON格式化",
+        "type": "item",
+        "attr": {
+          "id": "jsonFormat",
+          "icon": "am-icon-suitcase",
+          "url": "tools/format/json"
+        }
+      },
+      {
+        "title": "SQL格式化",
+        "type": "item",
+        "attr": {
+          "id": "sqlFormat",
+          "icon": "am-icon-suitcase",
+          "url": "tools/format/sql"
+        }
+      },
+      {
+        "title": "XML格式化",
+        "type": "item",
+        "attr": {
+          "id": "xmlFormat",
+          "icon": "am-icon-suitcase",
+          "url": "tools/format/xml"
+        }
+      }
+    ]
+  },
+  {
+    "title": "分享",
+    "type": "item",
+    "attr": {
+      "icon": "am-icon-share"
+    }
+  }
+]

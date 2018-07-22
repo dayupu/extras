@@ -10,3 +10,5 @@ spring:
     mode: LEGACYHTML5
 server:
   port: 9090
+  servlet:
+    context-path: /app

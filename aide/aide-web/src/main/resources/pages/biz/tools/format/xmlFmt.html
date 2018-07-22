@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON formatter</title>
+</head>
+<body>
+<div th:fragment="content">
+    <ol class="am-breadcrumb">
+        <li><a th:href="@{/tools}" class="am-icon-home">工具</a></li>
+        <li class="am-active">XML格式化</li>
+    </ol>
+    <form class="am-form" disabled="disabled">
+        <fieldset>
+            <div class="am-form-group am-u-sm-12">
+                <label for="xmlText">XML文本</label>
+                <textarea class="" rows="10" id="xmlText"></textarea>
+            </div>
+            <div class="am-form-group">
+                <div class="am-u-sm-12">
+                    <button type="button" class="am-btn am-btn-primary am-btn-sm" id="prettyBtn">格式化</button>
+                    <button type="button" class="am-btn am-btn-warning am-btn-sm copy-btn" id="copyBtn"
+                            data-am-loading="{spinner: 'circle-o-notch', loadingText: '复制成功'}"
+                            data-clipboard-action="copy" data-clipboard-target="#xmlPretty">复制
+                    </button>
+                </div>
+            </div>
+            <div class="am-form-group am-u-sm-12">
+                <pre class="am-pre-scrollable" style="min-height: 200px;max-height: 500px;" id="xmlPretty"></pre>
+            </div>
+        </fieldset>
+    </form>
+    <script>
+        require(["jquery", "avatarFmt", "clipboard", "hljs"], function ($, avatarFmt, clipboard, hljs) {
+            $("#prettyBtn").click(function () {
+                var result = avatarFmt.formatXml($("#xmlText").val());
+                result = result.replace(eval("/</g"),"&lt;");
+                result = result.replace(eval("/>/g"),"&gt;");
+                $("#xmlPretty").html( result);
+                $("pre").each(function (i, block) {
+                    hljs.highlightBlock(block);
+                })
+            });
+            // 复制内容到剪切板
+            window['Clipboard'] = clipboard;
+            var copy = new Clipboard(".copy-btn");
+            copy.on('success', function (e) {
+                $("#copyBtn").button('loading');
+                setTimeout(function () {
+                    $("#copyBtn").button('reset');
+                }, 200);
+                e.clearSelection();
+            });
+            copy.on('error', function (e) {
+                console.error('Action:', e.action);
+                console.error('Trigger:', e.trigger);
+            });
+        })
+    </script>
+</div>
+</body>
+</html>

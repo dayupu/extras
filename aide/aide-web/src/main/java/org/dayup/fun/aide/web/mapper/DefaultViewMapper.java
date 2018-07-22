@@ -10,8 +10,9 @@ public class DefaultViewMapper extends WebMvcConfigurationSupport {
 
     @Override
     protected void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-        registry.addViewController("/2").setViewName("page2");
+        registry.addRedirectViewController("/", "/tools");
+        registry.addViewController("/tools").setViewName("tools");
+        registry.addViewController("/doc").setViewName("doc");
     }
 
     @Override

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="content">
+    页面A
+
+    <script>
+        require(['jquery'], function ($) {
+             // alert("我是页面A");
+        });
+    </script>
+</div>
+</body>
+</html>
