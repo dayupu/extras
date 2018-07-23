@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>format</title>
+</head>
+<body>
+<div th:fragment="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/tools}">工具</a></li>
+        <li class="active">JSON</li>
+    </ol>
+    <div class="col-md-12" style="text-align: right;margin-bottom: 5px;">
+        <div class="btn-group">
+            <a href="javascript:void(0)" class="btn btn-sm btn-success" title="只显示编辑器"
+               onclick="divLayout('left')"><span class="glyphicon glyphicon-align-left"></span></a>
+            <a href="javascript:void(0)" class="btn btn-sm btn-success" title="显示编辑器&视图"
+               onclick="divLayout('both')"><span class="glyphicon glyphicon-align-justify"></span></a>
+            <a href="javascript:void(0)" class="btn btn-sm btn-success"  title="只显示视图"
+               onclick="divLayout('right')"><span class="glyphicon glyphicon-align-right"></span></a>
+        </div>
+    </div>
+    <div class="col-md-7" id="jsonEditDiv">
+        <div class="tool-head">
+            <button id="prettyBtn" type="button" class="btn btn-primary btn-sm">美化</button>
+            <button id="compressBtn" type="button" class="btn btn-primary btn-sm">压缩</button>
+            <button id="copyBtn" type="button" class="btn btn-success btn-sm" data-clipboard-action="copy">复制</button>
+            <button id="cleanBtn" type="button" class="btn btn-danger btn-sm">清空</button>
+        </div>
+        <div class="code-mirror-font">
+            <textarea id="codeMirror"></textarea>
+        </div>
+        <div class="bg-danger" style="padding: 5px;display: none;" id="message"></div>
+    </div>
+    <div class="col-md-5" id="jsonViewDiv">
+        <div class="tool-head">
+            <button id="collapseBtn" type="button" class="btn btn-sm">折叠</button>
+            <button id="expandBtn" type="button" class="btn btn-sm">展开</button>
+        </div>
+        <div id="jsonView"></div>
+    </div>
+    <style>
+        #jsonView {
+            border: 1px solid #CCCCCC;
+            border-top: none;
+            height: 650px;
+            background-color: #FFFBF0 ;
+            padding: 5px;
+            overflow: auto;
+        }
+    </style>
+    <script>
+        require(["app", "appFormat", "codeMirror/textMirror", "clipboard", "jsonView"], function ($, format, textMirror, clipboard, jsonView) {
+            window['Clipboard'] = clipboard;
+            var editor = textMirror.fromTextArea($("#codeMirror")[0], {
+                mode: "application/json",
+                lineNumbers: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                styleActiveLine: true,
+                lineWrapping: true,
+                theme: "dracula"
+            });
+            editor.setSize(null, 650);
+            var handler = function (text, compress) {
+                $("#message").html("").hide();
+                try {
+                    format.jsonParse(text);
+                    $("#jsonView").JSONView(text);
+                    if (!compress) {
+                        editor.setValue(format.jsonPretty(text));
+                    } else {
+                        editor.setValue(format.jsonCompress(text));
+                    }
+                } catch (e) {
+                    var msg = e.toString().replace(/\n/g, "<br>");
+                    $("#message").html(msg).show();
+                }
+            };
+            $("#prettyBtn").click(function () {
+                handler(editor.getValue(), false)
+            });
+            $("#compressBtn").click(function () {
+                handler(editor.getValue(), true)
+            });
+            $("#cleanBtn").click(function () {
+                editor.setValue("");
+            });
+            new Clipboard('#copyBtn', {
+                text: function () {
+                    return editor.getValue();
+                }
+            });
+
+            divLayout = function (align) {
+                var editDiv = $("#jsonEditDiv");
+                var viewDiv = $("#jsonViewDiv");
+                if (align == "left") {
+                    $(editDiv).removeClass();
+                    $(viewDiv).removeClass();
+                    $(editDiv).addClass("col-md-12").show();
+                    $(viewDiv).hide();
+                } else if (align == "right") {
+                    $(editDiv).removeClass();
+                    $(viewDiv).removeClass();
+                    $(viewDiv).addClass("col-md-12").show();
+                    $(editDiv).hide();
+                } else {
+                    $(editDiv).removeClass();
+                    $(viewDiv).removeClass();
+                    $(editDiv).addClass("col-md-7").show();
+                    $(viewDiv).addClass("col-md-5").show();
+                }
+            };
+
+            // JSON VIEW
+            $('#collapseBtn').on('click', function () {
+                $('#jsonView').JSONView('collapse');
+            });
+            $('#expandBtn').on('click', function () {
+                $('#jsonView').JSONView('expand');
+            });
+        })
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+html,
+body {
+    height: 100%;
+    font-family: 'PingFangSC','helvetica neue','hiragino sans gb','arial','microsoft yahei ui','microsoft yahei','simsun';
+    background-color: #EEEEEE;
+}
+
+.app-navbar {
+    border-bottom: 4px solid #27ae60;
+}
+
+.app-navbar-nav {
+    font-weight: bold;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: white;
+}
+
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
+    color: #27ae60;
+    background-color: inherit;
+}
+
+.app-content {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px #bbbbbb;
+    zoom: 1;
+    font-size: 13px;
+}
+
+.main-content {
+    min-height: 500px;
+    padding: 10px 0;
+    height: auto;
+}
+
+.tool-head {
+    background-color: #f5f5f5;
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+}
+
+.code-mirror-font {
+    font-size: 13px;
+    line-height: 20px;
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>format</title>
+</head>
+<body>
+<div th:fragment="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/tools}">工具</a></li>
+        <li class="active">图片BASE64</li>
+    </ol>
+    <div class="col-md-12">
+        <form id="imageForm" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="imageUpload">
+                    <button type="button" class="btn btn-sm btn-primary" id="upload">图片转BASE64</button>
+                </label>
+                <hr style="margin: 10px 0;"/>
+                <input type="file" id="imageUpload" name="file"/>
+                <p class="help-block">请先选择图片，大小不能超过5MB</p>
+            </div>
+            <div class="form-group">
+                <label for="imageBase64" class="text-success">BASE64</label>
+                <textarea class="form-control" id="imageBase64" rows="15"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="imageShow" class="text-success">IMG标签展示</label>
+                <div id="imageShow" style="overflow: auto;max-height: 300px;">
+                    <img id="image" src=""/>
+                    <div class="bg-danger" style="padding: 5px;display: none;" id="message"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        require(["app", "jqueryForm"], function ($) {
+            var messageTip = function (show, message) {
+                $("#image").removeAttr("src");
+                if (show) {
+                    $("#message").html(message).show();
+                } else {
+                    $("#message").html("").hide();
+                }
+            };
+            $("#upload").click(function () {
+                messageTip(false);
+                if ($("#imageUpload").val() == null || $("#imageUpload").val() == "") {
+                    alert("请先选择图片");
+                    return;
+                }
+                $("#imageForm").xyzAjaxSubmit("tools/code/image/upload", {}, function (data) {
+                    if (data.success) {
+                        $("#imageBase64").val(data.base64);
+                        $("#image").attr("src", data.base64);
+                        return;
+                    }
+                    messageTip(true, data.message);
+                });
+            });
+
+        })
+    </script>
+</div>
+</body>
+</html>

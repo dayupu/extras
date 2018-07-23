@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>format</title>
+</head>
+<body>
+<div th:fragment="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/tools}">工具</a></li>
+        <li class="active">编码&解码</li>
+    </ol>
+    <div class="col-md-12">
+        <form id="encodeForm">
+            <div class="form-group">
+                <label for="originText" class="text-primary">明文</label>
+                <textarea name="plaintext" class="form-control" rows="10" id="originText"></textarea>
+            </div>
+            <div class="form-group bg-warning" style="padding: 5px;">
+                <div class="radio">
+                    &nbsp;<span class="text-success"><strong>编码</strong></span>&nbsp;
+                    <label><input type="radio" name="encryptType" value="base64" checked/>BASE64</label>&nbsp;
+                    <label><input type="radio" name="encryptType" value="unicode"/>Unicode</label>&nbsp;
+                    <label><input type="radio" name="encryptType" value="url"/>URL</label>&nbsp;
+                    <label><input type="radio" name="encryptType" value="ascii"/>ASCII</label>&nbsp;
+                    <button id="encodeBtn" class="btn btn-sm btn-primary" type="button">编码</button>
+                    <button id="decodeBtn" class="btn btn-sm btn-primary" type="button">解码</button>
+                </div>
+                <p class="help-block">注：编码字符集为UTF-8</p>
+            </div>
+            <div class="form-group">
+                <label for="resultText" class="text-primary">密文</label>
+                <textarea name="ciphertext" class="form-control" rows="10" id="resultText"></textarea>
+            </div>
+            <div class="form-group">
+                <div class="bg-danger" style="padding: 5px;display: none;" id="message"></div>
+            </div>
+        </form>
+    </div>
+    <script>
+        require(["app"], function ($) {
+
+            var messageTip = function (show, message) {
+                if (show) {
+                    $("#message").html(message).show();
+                } else {
+                    $("#message").html("").hide();
+                }
+            };
+
+            $("#encodeBtn").click(function () {
+                messageTip(false);
+                $.xyzPost("tools/code/encryption", JSON.stringify($("#encodeForm").serializeJSON()), function (data) {
+                    $("textarea[name='ciphertext']").val(data.ciphertext);
+                    if (!data.success) {
+                        messageTip(true, data.message);
+                    }
+                })
+            });
+
+            $("#decodeBtn").click(function () {
+                messageTip(false);
+                $.xyzPost("tools/code/decryption", JSON.stringify($("#encodeForm").serializeJSON()), function (data) {
+                    $("textarea[name='plaintext']").val(data.plaintext);
+                    if (!data.success) {
+                        messageTip(true, data.message);
+                    }
+                })
+            })
+        })
+    </script>
+</div>
+</body>
+</html>

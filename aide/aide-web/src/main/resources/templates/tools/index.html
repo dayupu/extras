@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>工具</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8"/>
+    <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/static/favicon.ico}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/refs/bootstrap-3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/toolsApp.css}"/>
+</head>
+<body>
+<script th:src="@{/static/refs/require/require.min.js}"></script>
+<script th:src="@{/static/refs/jquery-3.0.0/jquery-3.0.0.min.js}"></script>
+<script th:src="@{/static/refs/codemirror-5.39.2/lib/codemirror.js}"></script>
+<script>
+    require.config({
+        baseUrl: "/app/static",
+        paths: {
+            "app": 'refs/support/app-jquery',
+            "appFormat": 'refs/support/app-format',
+            "jquery": 'refs/jquery-3.0.0/jquery-3.0.0.min',
+            "bootstrap": 'refs/bootstrap-3.3.7/js/bootstrap.min',
+            "NProgress": 'refs/support/loading/nprogress',
+            "serializeJson": 'refs/support/ext/jquery.serializejson.min',
+            "codeMirror": 'refs/codemirror-5.39.2',
+            "diff_match_patch": "refs/codemirror-5.39.2/ext/diff_match_patch",
+            "clipboard": "refs/clipboard/clipboard-2.0.1.min",
+            "jqueryForm": "refs/support/ext/jquery.form.min",
+            "xmlFormat": "refs/support/ext/xmlFormat",
+            "jsonView": "refs/jsonview/jquery.jsonview"
+        },
+        map: {
+            '*': {
+                'css': 'refs/require/css.min'
+            }
+        },
+        shim: {
+            "bootstrap": {
+                deps: ["jquery"]
+            },
+            "xmlFormat": {
+                deps: ["jquery"]
+            },
+            "serializeJson": {
+                deps: ["jquery"]
+            },
+            "jsonView": {
+                deps: ["jquery", "css!refs/jsonview/jquery.jsonview.css"]
+            },
+            "NProgress": {
+                deps: ["css!refs/support/loading/nprogress.css"]
+            }
+        }
+    });
+</script>
+<div>
+    <nav class="navbar navbar-inverse navbar-fixed-top app-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <img th:src="@{/static/favicon.ico}" width="40" style="margin-top: 5px;margin-right: 10px;"/>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav app-navbar-nav" id="appNavMenu">
+                    <li location='tools'><a th:href="@{/tools}">工具</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container app-content">
+        <div class="main-content" id="mainContent"
+             th:include="(${contentPage} != null ? ${contentPage} : 'tools/home') :: content"></div>
+    </div>
+    <script>
+        require(["app"], function ($) {
+            $.xyzGet("static/json/tools-menu.json", function (menus) {
+                var menuHtml = "";
+                $.each(menus, function () {
+                    if (this.isLeaf) {
+                        menuHtml += "<li location='" + this.location + "'><a href='javascript:void(0);' link='" + this.url + "'>" + this.title + "</a></li>"
+                    } else {
+                        menuHtml += "<li location='" + this.location + "' class='dropdown'>" +
+                            "<a href='javascript:void(0);' class='dropdown-toggle' data-toggle='dropdown' role='button'" +
+                            " aria-haspopup='true' aria-expanded='false'>" + this.title + "<span class='caret'></span></a>" +
+                            "<ul class='dropdown-menu'>";
+                        $.each(this.children, function (index) {
+                            if (index != 0) {
+                                menuHtml += "<li role='separator' class='divider'></li>";
+                            }
+                            menuHtml += "<li><a href='javascript:void(0);' link='" + this.url + "'>" + this.title + "</a></li>";
+                        });
+                        menuHtml += "</ul></li>";
+                    }
+                });
+                $("#appNavMenu").append(menuHtml);
+                var pathName = window.location.pathname;
+                var activeTab = function (curTab) {
+                    if (!$(curTab).hasClass("active")) {
+                        $(curTab).addClass("active")
+                    }
+                    $("#appNavMenu > li").not(curTab).each(function () {
+                        if ($(this).hasClass("active")) {
+                            $(this).removeClass("active")
+                        }
+                    });
+                };
+
+                $("#appNavMenu > li").each(function () {
+                    if (pathName.indexOf($(this).attr("location")) != -1) {
+                        activeTab(this);
+                        return;
+                    }
+                });
+
+                $("#appNavMenu a[link^='tools']").each(function () {
+                    $(this).click(function () {
+                        $("#mainContent").xyzLoadPage($(this).attr("link"));
+                        activeTab($(this).parents("li[location^='tools']"))
+                    });
+                });
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

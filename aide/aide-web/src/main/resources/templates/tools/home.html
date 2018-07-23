@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>format</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="row">
+        <div class="input-group" style="width: 300px;margin: 20px auto;">
+            <input type="text" class="form-control" placeholder="关键字">
+            <span class="input-group-btn">
+                <input type="submit" class="btn btn-primary" value="搜索"/>
+            </span>
+        </div>
+    </div>
+    <hr/>
+    <div class="row" id="allTools"></div>
+    <style>
+        .thumbnail {
+            background-color: #FFFAF0;
+        }
+
+        .thumbnail:hover {
+            cursor: pointer;
+            box-shadow: 5px 5px 5px #EEEEEE;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: orangered;
+        }
+
+        .card-text {
+            height: 60px;
+            line-height: 20px;
+            display: -webkit-box;
+            text-indent: 1em;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-button {
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        .caption hr {
+            margin: 8px 0;
+        }
+    </style>
+    <script>
+        require(["app"], function ($) {
+            $.xyzGet("static/json/tools-menu.json", function (menus) {
+                var menuArgs = [];
+                $.each(menus, function () {
+                    if (this.isLeaf) {
+                        menuArgs.push(this)
+                    } else {
+                        $.each(this.children, function () {
+                            menuArgs.push(this);
+                        })
+                    }
+                });
+                var html = "";
+                $.each(menuArgs, function () {
+                    html += "<div class=\"col-md-3\"><div class='thumbnail'><div class='caption'>" +
+                        "<div class='card-title'><label>" + this.title + "</label></div><hr/>" +
+                        "<div class='card-text'>" + this.description + "</div>" +
+                        "<div class='card-button'>" +
+                        "<a href='javascript:void(0)' class='btn btn-sm btn-success' link='" + this.url + "'>进入</a>" +
+                        "</div></div></div></div>"
+                });
+                $("#allTools").append(html);
+                $("#allTools a[link^='tools']").each(function () {
+                    $(this).click(function () {
+                        $("#appNavMenu").find("a[link='" + $(this).attr("link") + "']").trigger("click");
+                    });
+                });
+            })
+        });
+    </script>
+</div>
+</body>
+</html>

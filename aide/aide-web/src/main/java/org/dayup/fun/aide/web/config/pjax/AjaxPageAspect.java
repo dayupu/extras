@@ -17,11 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 public class AjaxPageAspect {
 
 
-    @Pointcut("@annotation(org.dayup.fun.aide.web.config.pjax.AjaxPageEnable)")//指向自定义注解路径
+    @Pointcut("@annotation(org.dayup.fun.aide.web.config.pjax.EnableAjaxPage)")//指向自定义注解路径
     public void AjaxPagePointcut() {
 
     }
-
 
     @Around("AjaxPagePointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
@@ -34,7 +33,7 @@ public class AjaxPageAspect {
                 return ajaxModel;
             }
 
-            ajaxModel.getModel().put("includePage", ajaxModel.getAjaxPage());
+            ajaxModel.getModel().put("contentPage", ajaxModel.getAjaxPage());
             ajaxModel.setViewName(ajaxModel.getPage());
             return ajaxModel;
         }

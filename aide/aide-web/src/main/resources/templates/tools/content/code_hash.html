@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>format</title>
+</head>
+<body>
+<div th:fragment="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/tools}">工具</a></li>
+        <li class="active">散列&哈希</li>
+    </ol>
+    <div class="col-md-12">
+        <form id="hashForm">
+            <div class="form-group">
+                <label for="originText" class="text-primary">明文</label>
+                <textarea name="plaintext" class="form-control" rows="10" id="originText"></textarea>
+            </div>
+            <div class="form-group bg-warning" style="padding: 5px;">
+                <div class="radio">
+                    &nbsp;<span class="text-success"><strong>算法</strong></span>&nbsp;
+                    <label><input type="radio" name="encryptType" value="md5" checked/>MD5</label>&nbsp;
+                    <label><input type="radio" name="encryptType" value="sha1"/>SHA1</label>&nbsp;
+                    <label><input type="radio" name="encryptType" value="sha256"/>SHA256</label>&nbsp;
+                    <label><input type="radio" name="encryptType" value="sha512"/>SHA512</label>&nbsp;
+                    <button id="encryptBtn" class="btn btn-sm btn-primary" type="button">加密</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="resultText" class="text-primary">密文</label>
+                <textarea name="ciphertext" class="form-control" rows="10" id="resultText"></textarea>
+            </div>
+            <div class="form-group">
+                <div class="bg-danger" style="padding: 5px;display: none;" id="message"></div>
+            </div>
+
+        </form>
+    </div>
+    <script>
+        require(["app"], function ($) {
+
+            var messageTip = function (show, message) {
+                if (show) {
+                    $("#message").html(message).show();
+                } else {
+                    $("#message").html("").hide();
+                }
+            };
+
+            $("#encryptBtn").click(function () {
+                messageTip(false);
+                $.xyzPost("tools/code/encryption", JSON.stringify($("#hashForm").serializeJSON()), function (data) {
+                    $("textarea[name='ciphertext']").val(data.ciphertext);
+                    if (!data.success) {
+                        messageTip(true, data.message);
+                    }
+                })
+            });
+        })
+    </script>
+</div>
+</body>
+</html>

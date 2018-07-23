@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON formatter</title>
+</head>
+<body>
+<div th:fragment="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/tools}">工具</a></li>
+        <li class="active">文本比较</li>
+    </ol>
+    <div class="col-md-12">
+        <div class="tool-head" style="border-bottom: none;">
+            <select id="contentType" class="form-control input-sm" style="width: 120px;">
+                <option value="text/plain">普通文本</option>
+                <option value="javascript">JSON</option>
+                <option value="text/x-sql">SQL</option>
+                <option value="application/xml">XML</option>
+                <option value="text/html">HTML</option>
+            </select>
+        </div>
+        <div>
+            <div style="border: none;" id="contentText"></div>
+        </div>
+    </div>
+
+    <script>
+        require(["app", "codeMirror/textMerge"], function ($, textMerge) {
+            var initUI = function (value, originValue, mode) {
+                $("#contentText").empty();
+                return textMerge.mergeView($("#contentText")[0], {
+                    value: value,
+                    orig: originValue,
+                    mode: mode,
+                    origLeft: null,
+                    lineNumbers: true,
+                    styleActiveLine: true,
+                    matchBrackets: true,
+                    highlightDifferences: true,
+                    connect: null,
+                    collapseIdentical: false,
+                    allowEditingOriginals: true,
+                    lineWrapping: true,
+                    theme: "idea",
+                    height: 700
+                });
+            };
+            var editor = initUI("", "", "text/html");
+            $("#contentType").change(function () {
+                var mvValue = textMerge.value(editor);
+                editor = initUI(mvValue.left, mvValue.right, $(this).val());
+            });
+
+        })
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>format</title>
+</head>
+<body>
+<div th:fragment="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/tools}">工具</a></li>
+        <li class="active">XML</li>
+    </ol>
+    <div class="col-md-12">
+        <div class="tool-head">
+            <button id="prettyBtn" type="button" class="btn btn-sm btn-primary">美化</button>
+            <button id="compressBtn" type="button" class="btn btn-sm btn-primary">压缩</button>
+            <button id="copyBtn" type="button" class="btn btn-sm btn-success" data-clipboard-action="copy">复制</button>
+            <button id="cleanBtn" type="button" class="btn btn-sm btn-danger">清空</button>
+        </div>
+        <div>
+            <textarea class="" rows="10" id="codeMirror"></textarea>
+        </div>
+        <div class="bg-danger" style="padding: 5px;display: none;" id="message"></div>
+    </div>
+    <script>
+        require(["app", "appFormat", "codeMirror/textMirror", "clipboard"], function ($, format, textMirror, clipboard) {
+            window['Clipboard'] = clipboard;
+            var editor = textMirror.fromTextArea($("#codeMirror")[0], {
+                mode: "application/xml",
+                lineNumbers: true,
+                matchTags: true,
+                autoCloseTags: true,
+                styleActiveLine: true,
+                lineWrapping: true,
+                theme: "dracula"
+            });
+            editor.setSize(null, 650);
+            var handler = function (text, compress) {
+                $("#message").html("").hide();
+                try {
+                    format.xmlParse(text);
+                    if (!compress) {
+                        editor.setValue(format.xmlPretty(text));
+                    } else {
+                        editor.setValue(format.xmlCompress(text));
+                    }
+                } catch (e) {
+                    var msg = e.toString().replace(/\n/g, "<br>");
+                    $("#message").html(msg).show();
+                }
+            };
+            $("#prettyBtn").click(function () {
+                handler(editor.getValue(), false)
+            });
+            $("#compressBtn").click(function () {
+                handler(editor.getValue(), true)
+            });
+            $("#cleanBtn").click(function () {
+                editor.setValue("");
+            });
+            new Clipboard('#copyBtn', {
+                text: function () {
+                    return editor.getValue();
+                }
+            });
+        })
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>admin components for layout</title>
+    </head>
+    <body>
+        <header class="app-header am-topbar am-topbar-inverse" th:fragment="header">
+            <h1 class="am-topbar-brand">
+                <a href="#">Fπ Aide</a>
+            </h1>
+            <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
+                <ul class="am-nav am-nav-pills am-topbar-nav" id="headerMenu">
+                    <li class="am-active">
+                        <a th:href="@{/tools}">工具</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/doc}">文档</a>
+                    </li>
+                </ul>
+            </div>
+            <script>
+                require(["supp/app", "jquery"], function (app, $) {
+                    var pagePath = app.pagePath();
+                    $("#headerMenu").find("li").each(function () {
+                        if ($(this).hasClass("am-active")) {
+                            $(this).removeClass("am-active");
+                        }
+                        if (pagePath.indexOf($(this).children("a").attr("href")) != -1) {
+                            $(this).addClass("am-active");
+                        }
+                    })
+                });
+            </script>
+        </header>
+        <footer class="app-footer" th:fragment="footer">
+            footer
+        </footer>
+        <div style="display: none;" th:fragment="events">
+            <script>
+                /* 监听浏览器（前进/后退）事件 */
+                window.addEventListener("popstate", function (e) {
+                    window.location.reload();
+                }, false);
+            </script>
+        </div>
+    </body>
+</html>

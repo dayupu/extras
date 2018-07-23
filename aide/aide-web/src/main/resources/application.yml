@@ -5,9 +5,12 @@ spring:
   thymeleaf:
     cache: false
     enabled: true
-    prefix: classpath:/pages/
+    prefix: classpath:/templates/
     suffix: .html
     mode: LEGACYHTML5
+  mvc:
+    favicon:
+      enabled: false
 server:
   port: 9090
   servlet:

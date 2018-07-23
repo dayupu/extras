@@ -1,7 +1,7 @@
 package org.dayup.fun.aide.web.controller.tools;
 
 import org.dayup.fun.aide.web.config.AjaxModelAndView;
-import org.dayup.fun.aide.web.config.pjax.AjaxPageEnable;
+import org.dayup.fun.aide.web.config.pjax.EnableAjaxPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,21 +13,26 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/tools/format")
 public class FormatController {
 
-    @AjaxPageEnable
+    @EnableAjaxPage
     @RequestMapping("json")
-    public ModelAndView formatJson(HttpServletRequest request, Model model) {
-        return new AjaxModelAndView("tools", "biz/tools/format/jsonFmt.html");
+    public ModelAndView formatJson() {
+        return new AjaxModelAndView("tools/index", "tools/content/format_json");
     }
 
-    @AjaxPageEnable
+    @EnableAjaxPage
+    @RequestMapping("xml")
+    public ModelAndView formatXml() {
+        return new AjaxModelAndView("tools/index", "tools/content/format_xml");
+    }
+
+    @EnableAjaxPage
     @RequestMapping("sql")
     public ModelAndView formatSql(HttpServletRequest request, Model model) {
-        return new AjaxModelAndView("tools", "biz/tools/format/sqlFmt.html");
+        return new AjaxModelAndView("tools", ajaxPage("sqlFmt.html"));
     }
 
-    @AjaxPageEnable
-    @RequestMapping("xml")
-    public ModelAndView formatXml(HttpServletRequest request, Model model) {
-        return new AjaxModelAndView("tools", "biz/tools/format/xmlFmt.html");
+    private String ajaxPage(String page) {
+        return "tools/content/" + page;
     }
+
 }
