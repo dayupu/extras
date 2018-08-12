@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON formatter</title>
+</head>
+<body>
+<div th:fragment="content">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/tools}">工具</a></li>
+        <li class="active">时间戳</li>
+    </ol>
+    <div class="col-md-12">
+        <div style="text-align: center;font-size: 14px;">
+            现在的Unix时间戳(毫秒)是：
+            <label id="timestampLabel" class="text-primary"></label>&nbsp;
+            <div class="btn-group">
+                <button class="btn btn-sm btn-success" onclick="unixMillis('start')">开始</button>
+                <button class="btn btn-sm btn-danger" onclick="unixMillis('stop')">停止</button>
+            </div>
+        </div>
+        <hr/>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="timestampFrom" class="col-sm-2 control-label text-primary">Unix时间戳</label>
+                <div class="col-sm-3">
+                    <input id="timestampFrom" type="text" class="form-control" placeholder="时间戳（毫秒）"
+                           onkeyup="value=value.replace(/[^\d]/g,'')">
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" id="toDatetimeBtn" class="btn btn-sm btn-primary">转日期</button>
+                </div>
+                <div class="col-sm-3">
+                    <input id="datetimeTo" type="text" class="form-control" placeholder="yyyy-MM-dd HH:mm:ss">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="datetimeFrom" class="col-sm-2 control-label text-primary">日期</label>
+                <div class="col-sm-3">
+                    <input id="datetimeFrom" type="text" class="form-control" placeholder="yyyy-MM-dd HH:mm:ss">
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" id="toTimestampBtn" class="btn btn-sm btn-primary">转时间戳</button>
+                </div>
+                <div class="col-sm-3">
+                    <input id="timestampTo" type="text" class="form-control" placeholder="时间戳（毫秒）">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label text-primary">获取当前时间戳</label>
+                <div class="col-md-8">
+                    <table class="table table-striped table-bordered table-hover" style="font-size: 14px;">
+                        <thead>
+                        <tr class="bg-success">
+                            <th>Language</th>
+                            <th>Code</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Java</td>
+                            <td>System.currentTimeMillis()</td>
+                        </tr>
+                        <tr>
+                            <td>JavaScript</td>
+                            <td>new Date().getTime()</td>
+                        </tr>
+                        <tr>
+                            <td>MySQL</td>
+                            <td>SELECT unix_timestamp(now())</td>
+                        </tr>
+                        <tr>
+                            <td>Python</td>
+                            <td>import time<br/>time.time()</td>
+                        </tr>                        <tr>
+                            <td>Unix / Linux</td>
+                            <td>date +%s</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <script>
+        require(["app", "appJqueryUI"], function ($) {
+            var seed = null;
+            var refreshTimestamp = function () {
+                $("#timestampLabel").text(new Date().getTime());
+            };
+            refreshTimestamp();
+            unixMillis = function (op) {
+                if (op == "start" && seed == null) {
+                    seed = setInterval(function () {
+                        refreshTimestamp()
+                    }, 100);
+                }
+                if (op == "stop") {
+                    clearInterval(seed);
+                    seed = null;
+                }
+            };
+            unixMillis("start");
+            var formatTimestamp = function (timestamp) {
+                var date = new Date();
+                if (timestamp.length == 10) {
+                    timestamp = timestamp * 1000
+                }
+                date.setTime(timestamp);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+            };
+
+            $("#toDatetimeBtn").click(function () {
+                var timestamp = $("#timestampFrom").val();
+                if (timestamp == null || timestamp == "") {
+                    return;
+                }
+                $("#datetimeTo").val(formatTimestamp(timestamp))
+            });
+
+            $("#datetimeFrom").datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                timeFormat: 'HH:mm:ss',
+                showSecond: true,
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                monthNamesShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+                dayNamesShort: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+                dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
+                changeMonth: false,
+                changeYear: true
+            });
+            $("#toTimestampBtn").click(function () {
+                var datetime = $("#datetimeFrom").val();
+                if (datetime == null || datetime == "") {
+                    return;
+                }
+                $("#timestampTo").val(new Date(datetime).getTime())
+            });
+
+        })
+    </script>
+</div>
+</body>
+</html>

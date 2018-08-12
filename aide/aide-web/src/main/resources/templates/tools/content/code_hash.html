@@ -16,14 +16,16 @@
                 <label for="originText" class="text-primary">明文</label>
                 <textarea name="plaintext" class="form-control" rows="10" id="originText"></textarea>
             </div>
-            <div class="form-group bg-warning" style="padding: 5px;">
-                <div class="radio">
-                    &nbsp;<span class="text-success"><strong>算法</strong></span>&nbsp;
-                    <label><input type="radio" name="encryptType" value="md5" checked/>MD5</label>&nbsp;
-                    <label><input type="radio" name="encryptType" value="sha1"/>SHA1</label>&nbsp;
-                    <label><input type="radio" name="encryptType" value="sha256"/>SHA256</label>&nbsp;
-                    <label><input type="radio" name="encryptType" value="sha512"/>SHA512</label>&nbsp;
-                    <button id="encryptBtn" class="btn btn-sm btn-primary" type="button">加密</button>
+            <div class="form-group op-style">
+                <div>
+                    <label><input type="radio" name="encryptType" value="md5" checked/>&nbsp;MD5</label>
+                    <label><input type="radio" name="encryptType" value="sha1"/>&nbsp;SHA1</label>
+                    <label><input type="radio" name="encryptType" value="sha256"/>&nbsp;SHA256</label>
+                    <label><input type="radio" name="encryptType" value="sha512"/>&nbsp;SHA512</label>
+
+                    <span style="float: right;">
+                          <button id="encryptBtn" class="btn btn-danger" type="button">加密</button>
+                    </span>
                 </div>
             </div>
             <div class="form-group">
@@ -37,7 +39,16 @@
         </form>
     </div>
     <script>
-        require(["app"], function ($) {
+        require(["app", "icheck"], function ($) {
+
+            $('input').iCheck({
+                labelHover: false,
+                cursor: true,
+                checkboxClass: 'icheckbox_polaris',  // 注意square和blue的对应关系
+                radioClass: 'iradio_polaris',
+                increaseArea : '50%',
+                labelHover: true
+            });
 
             var messageTip = function (show, message) {
                 if (show) {
@@ -58,6 +69,21 @@
             });
         })
     </script>
+    <style>
+        .op-style {
+            padding: 10px;
+            background-color: #2c323c;
+            font-size: 14px;
+            border: 1px solid #CCCCCC;
+
+        }
+
+        .op-style label{
+            cursor: pointer;
+            color: #CCCCCC;
+            margin-right: 10px;
+        }
+    </style>
 </div>
 </body>
 </html>

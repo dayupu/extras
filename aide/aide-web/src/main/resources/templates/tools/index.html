@@ -2,7 +2,7 @@
 <html lang="zh-CN"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>工具</title>
+    <title>小助手</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8"/>
     <link rel="shortcut icon" th:href="@{/static/favicon.ico}"/>
@@ -20,6 +20,7 @@
         paths: {
             "app": 'refs/support/app-jquery',
             "appFormat": 'refs/support/app-format',
+            "appJqueryUI": 'refs/support/app-jquery-ui',
             "jquery": 'refs/jquery-3.0.0/jquery-3.0.0.min',
             "bootstrap": 'refs/bootstrap-3.3.7/js/bootstrap.min',
             "NProgress": 'refs/support/loading/nprogress',
@@ -29,7 +30,9 @@
             "clipboard": "refs/clipboard/clipboard-2.0.1.min",
             "jqueryForm": "refs/support/ext/jquery.form.min",
             "xmlFormat": "refs/support/ext/xmlFormat",
-            "jsonView": "refs/jsonview/jquery.jsonview"
+            "jsonView": "refs/jsonview/jquery.jsonview",
+            "icheck": "refs/icheck-1.x/icheck",
+            "jquery-ui": "refs/jquery-ui-1.12.1/jquery-ui"
         },
         map: {
             '*': {
@@ -46,12 +49,19 @@
             "serializeJson": {
                 deps: ["jquery"]
             },
+            "jquery-ui": {
+                deps: ["jquery", "css!refs/jquery-ui-1.12.1/jquery-ui.css", "css!refs/jquery-ui-1.12.1/jquery-ui.theme.min.css"]
+            },
             "jsonView": {
                 deps: ["jquery", "css!refs/jsonview/jquery.jsonview.css"]
             },
             "NProgress": {
                 deps: ["css!refs/support/loading/nprogress.css"]
+            },
+            "icheck": {
+                deps: ["jquery", "css!refs/icheck-1.x/skins/polaris/polaris.css"]
             }
+
         }
     });
 </script>
@@ -80,6 +90,14 @@
         <div class="main-content" id="mainContent"
              th:include="(${contentPage} != null ? ${contentPage} : 'tools/home') :: content"></div>
     </div>
+    <footer>
+        <div class="container">
+            <div class="col-md-12" style="text-align: center;margin-top:15px;font-size: 13px;color:grey;">
+                Copyright @2018 工作小助手. &nbsp;备案号：<a href="http://www.miitbeian.gov.cn">沪ICP备18030619号-1</a>
+            </div>
+        </div>
+    </footer>
+
     <script>
         require(["app"], function ($) {
             $.xyzGet("static/json/tools-menu.json", function (menus) {

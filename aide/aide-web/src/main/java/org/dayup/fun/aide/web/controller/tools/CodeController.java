@@ -3,6 +3,7 @@ package org.dayup.fun.aide.web.controller.tools;
 import org.dayup.fun.aide.common.utils.ASCIIUtils;
 import org.dayup.fun.aide.common.utils.EncryptUtils;
 import org.dayup.fun.aide.common.utils.UnicodeUtils;
+import org.dayup.fun.aide.dto.tools.TextEncode;
 import org.dayup.fun.aide.dto.tools.TextEncryption;
 import org.dayup.fun.aide.web.config.AjaxModelAndView;
 import org.dayup.fun.aide.web.config.pjax.EnableAjaxPage;
@@ -74,24 +75,60 @@ public class CodeController {
         return result;
     }
 
+    @ResponseBody
+    @PostMapping("execute/encode")
+    public TextEncode executeEncode(@RequestBody TextEncode text) {
+        try {
+
+            String outputText;
+            switch (text.getMethod()) {
+                case BASE64:
+                    if (text.getOpFlag() == 1) {
+                        outputText = Base64Utils.encodeToString(text.getInputText().getBytes(UTF8));
+                    } else {
+                        outputText = new String(Base64Utils.decodeFromString(text.getInputText()), UTF8);
+                    }
+                    break;
+                case ASCII:
+                    if (text.getOpFlag() == 1) {
+                        outputText = ASCIIUtils.encode(text.getInputText());
+                    } else {
+                        outputText = ASCIIUtils.decode(text.getInputText());
+                    }
+                    break;
+                case URL:
+                    if (text.getOpFlag() == 1) {
+                        outputText = URLEncoder.encode(text.getInputText(), UTF8);
+                    } else {
+                        outputText = URLDecoder.decode(text.getInputText(), UTF8);
+                    }
+                    break;
+                case UNICODE:
+                    if (text.getOpFlag() == 1) {
+                        outputText = UnicodeUtils.encode(text.getInputText());
+                    } else {
+                        outputText = UnicodeUtils.decode(text.getInputText());
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Not support SHA type");
+            }
+            text.setSuccess(true);
+            text.setOutputText(outputText);
+        } catch (Exception e) {
+            text.setSuccess(false);
+            text.setOutputText(null);
+            text.setMessage(e.getMessage());
+        }
+        return text;
+    }
+
 
     @ResponseBody
     @PostMapping("encryption")
     public TextEncryption encryption(@RequestBody TextEncryption text) {
         try {
             switch (text.getEncryptType()) {
-                case BASE64:
-                    text.setCiphertext(Base64Utils.encodeToString(text.getPlaintext().getBytes(UTF8)));
-                    break;
-                case ASCII:
-                    text.setCiphertext(ASCIIUtils.encode(text.getPlaintext()));
-                    break;
-                case URL:
-                    text.setCiphertext(URLEncoder.encode(text.getPlaintext(), UTF8));
-                    break;
-                case UNICODE:
-                    text.setCiphertext(UnicodeUtils.encode(text.getPlaintext()));
-                    break;
                 case MD5:
                     text.setCiphertext(DigestUtils.md5DigestAsHex(text.getPlaintext().getBytes(UTF8)));
                     break;
@@ -123,18 +160,6 @@ public class CodeController {
     public TextEncryption decryption(@RequestBody TextEncryption text) {
         try {
             switch (text.getEncryptType()) {
-                case BASE64:
-                    text.setPlaintext(new String(Base64Utils.decodeFromString(text.getCiphertext()), UTF8));
-                    break;
-                case ASCII:
-                    text.setPlaintext(ASCIIUtils.decode(text.getCiphertext()));
-                    break;
-                case URL:
-                    text.setPlaintext(URLDecoder.decode(text.getCiphertext(), UTF8));
-                    break;
-                case UNICODE:
-                    text.setPlaintext(UnicodeUtils.decode(text.getCiphertext()));
-                    break;
                 case AES:
                     text.setPlaintext(EncryptUtils.AES(text.getCiphertext(), text.getSecretKey(), false));
                     break;

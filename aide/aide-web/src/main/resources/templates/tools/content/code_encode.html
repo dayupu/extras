@@ -13,24 +13,26 @@
     <div class="col-md-12">
         <form id="encodeForm">
             <div class="form-group">
-                <label for="originText" class="text-primary">明文</label>
-                <textarea name="plaintext" class="form-control" rows="10" id="originText"></textarea>
+                <label for="inputText" class="text-primary">输入文本</label>
+                <textarea name="inputText" class="form-control" rows="10" id="inputText"></textarea>
             </div>
-            <div class="form-group bg-warning" style="padding: 5px;">
-                <div class="radio">
-                    &nbsp;<span class="text-success"><strong>编码</strong></span>&nbsp;
-                    <label><input type="radio" name="encryptType" value="base64" checked/>BASE64</label>&nbsp;
-                    <label><input type="radio" name="encryptType" value="unicode"/>Unicode</label>&nbsp;
-                    <label><input type="radio" name="encryptType" value="url"/>URL</label>&nbsp;
-                    <label><input type="radio" name="encryptType" value="ascii"/>ASCII</label>&nbsp;
-                    <button id="encodeBtn" class="btn btn-sm btn-primary" type="button">编码</button>
-                    <button id="decodeBtn" class="btn btn-sm btn-primary" type="button">解码</button>
+            <div class="form-group op-style">
+                <div>
+                    <label><input type="radio" name="method" value="base64" checked/>&nbsp;BASE64</label>
+                    <label><input type="radio" name="method" value="url"/>&nbsp;URL</label>
+                    <label><input type="radio" name="method" value="unicode"/>&nbsp;Unicode</label>
+                    <label><input type="radio" name="method" value="ascii"/>&nbsp;ASCII</label>
+
+                    <span style="float: right;">
+                        <button onclick="executeEncode(1)" class="btn btn-danger" type="button">编码</button>
+                        <button onclick="executeEncode(2)" class="btn btn-danger" type="button">解码</button>
+                    </span>
                 </div>
-                <p class="help-block">注：编码字符集为UTF-8</p>
+                <p class="text-danger">【注】编码字符集为UTF-8</p>
             </div>
             <div class="form-group">
-                <label for="resultText" class="text-primary">密文</label>
-                <textarea name="ciphertext" class="form-control" rows="10" id="resultText"></textarea>
+                <label for="outputText" class="text-primary">输出结果</label>
+                <textarea name="outputText" class="form-control" rows="10" id="outputText"></textarea>
             </div>
             <div class="form-group">
                 <div class="bg-danger" style="padding: 5px;display: none;" id="message"></div>
@@ -38,8 +40,16 @@
         </form>
     </div>
     <script>
-        require(["app"], function ($) {
+        require(["app", "icheck"], function ($) {
 
+            $('input').iCheck({
+                labelHover: false,
+                cursor: true,
+                checkboxClass: 'icheckbox_polaris',  // 注意square和blue的对应关系
+                radioClass: 'iradio_polaris',
+                increaseArea : '50%',
+                labelHover: true
+            });
             var messageTip = function (show, message) {
                 if (show) {
                     $("#message").html(message).show();
@@ -48,27 +58,34 @@
                 }
             };
 
-            $("#encodeBtn").click(function () {
+            executeEncode = function (opFlag) {
                 messageTip(false);
-                $.xyzPost("tools/code/encryption", JSON.stringify($("#encodeForm").serializeJSON()), function (data) {
-                    $("textarea[name='ciphertext']").val(data.ciphertext);
+                var form = $("#encodeForm").serializeJSON();
+                form["opFlag"] = opFlag;
+                $.xyzPost("tools/code/execute/encode", JSON.stringify(form), function (data) {
+                    $("textarea[name='outputText']").val(data.outputText);
                     if (!data.success) {
                         messageTip(true, data.message);
                     }
                 })
-            });
-
-            $("#decodeBtn").click(function () {
-                messageTip(false);
-                $.xyzPost("tools/code/decryption", JSON.stringify($("#encodeForm").serializeJSON()), function (data) {
-                    $("textarea[name='plaintext']").val(data.plaintext);
-                    if (!data.success) {
-                        messageTip(true, data.message);
-                    }
-                })
-            })
+            };
         })
     </script>
+    <style>
+        .op-style {
+            padding: 10px;
+            background-color: #2c323c;
+            font-size: 14px;
+            border: 1px solid #CCCCCC;
+
+        }
+
+        .op-style label{
+            cursor: pointer;
+            color: #CCCCCC;
+            margin-right: 10px;
+        }
+    </style>
 </div>
 </body>
 </html>
