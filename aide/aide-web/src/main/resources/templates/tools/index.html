@@ -14,6 +14,7 @@
 <script th:src="@{/static/refs/require/require.min.js}"></script>
 <script th:src="@{/static/refs/jquery-3.0.0/jquery-3.0.0.min.js}"></script>
 <script th:src="@{/static/refs/codemirror-5.39.2/lib/codemirror.js}"></script>
+<script type="text/javascript" color="255,0,0" opacity='0.7' th:src="@{/static/refs/support/loading/canvas-nest.min.js}"></script>
 <script>
     require.config({
         baseUrl: "/app/static",
@@ -32,7 +33,7 @@
             "xmlFormat": "refs/support/ext/xmlFormat",
             "jsonView": "refs/jsonview/jquery.jsonview",
             "icheck": "refs/icheck-1.x/icheck",
-            "jquery-ui": "refs/jquery-ui-1.12.1/jquery-ui"
+            "jquery-ui": "refs/jquery-ui-1.12.1/jquery-ui.min"
         },
         map: {
             '*': {

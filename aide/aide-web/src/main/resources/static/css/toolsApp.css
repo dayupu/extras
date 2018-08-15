@@ -1,7 +1,10 @@
 html,
 body {
     height: 100%;
-    font-family: 'PingFangSC','helvetica neue','hiragino sans gb','arial','microsoft yahei ui','microsoft yahei','simsun';
+    font-family: 'PingFangSC', 'helvetica neue', 'hiragino sans gb', 'arial', 'microsoft yahei ui', 'microsoft yahei', 'simsun';
+}
+
+body {
     background-color: #EEEEEE;
 }
 
